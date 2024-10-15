@@ -10,10 +10,14 @@ CONFIG += c++17
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainframe.cpp \
+    mainwindow.cpp \
+    triangle.cpp
 
 HEADERS += \
-    mainwindow.h
+    mainframe.h \
+    mainwindow.h \
+    triangle.h
 
 FORMS += \
     mainwindow.ui
