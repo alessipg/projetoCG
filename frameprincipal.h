@@ -1,16 +1,26 @@
-#ifndef MAINFRAME_H
-#define MAINFRAME_H
+#ifndef FRAMEPRINCIPAL_H
+#define FRAMEPRINCIPAL_H
 
 #include <QFrame>
 #include <QWidget>
+#include <QPushButton>
+#include <iostream>
+#include <QPainter>
 
-class MainFrame : public QFrame
+#include <aresta.h>
+#include <displayfile.h>
+
+class FramePrincipal : public QFrame
 {
     Q_OBJECT
 public:
-    explicit MainFrame(QWidget *parent = nullptr);
+    explicit FramePrincipal(QWidget *parent = nullptr);
+    void paintEvent(QPaintEvent *event) override;
+    DisplayFile df;
 public slots:
-    draw();
+    void desenharObjeto(const QString &buttonText);
+private:
+    QString objetoAlvo;
 };
 
-#endif // MAINFRAME_H
+#endif // FRAMEPRINCIPAL_H

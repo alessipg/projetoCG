@@ -9,15 +9,21 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    aresta.cpp \
+    displayfile.cpp \
+    frameprincipal.cpp \
     main.cpp \
-    mainframe.cpp \
     mainwindow.cpp \
-    triangle.cpp
+    objeto.cpp \
+    ponto.cpp
 
 HEADERS += \
-    mainframe.h \
+    aresta.h \
+    displayfile.h \
+    frameprincipal.h \
     mainwindow.h \
-    triangle.h
+    objeto.h \
+    ponto.h
 
 FORMS += \
     mainwindow.ui
