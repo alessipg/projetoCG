@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="MainFrame" name="frame">
+   <widget class="FramePrincipal" name="frame">
     <property name="geometry">
      <rect>
       <x>250</x>
@@ -30,37 +30,11 @@
      <enum>QFrame::Shadow::Raised</enum>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>470</y>
-      <width>83</width>
-      <height>29</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Desenhar</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton_2">
+   <widget class="QPushButton" name="btnTriangulo">
     <property name="geometry">
      <rect>
       <x>130</x>
-      <y>470</y>
-      <width>83</width>
-      <height>29</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Limpar</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton_3">
-    <property name="geometry">
-     <rect>
-      <x>130</x>
-      <y>170</y>
+      <y>80</y>
       <width>83</width>
       <height>29</height>
      </rect>
@@ -69,11 +43,11 @@
      <string>Triângulo</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_4">
+   <widget class="QPushButton" name="btnQuadrado">
     <property name="geometry">
      <rect>
       <x>130</x>
-      <y>210</y>
+      <y>120</y>
       <width>83</width>
       <height>29</height>
      </rect>
@@ -82,11 +56,11 @@
      <string>Quadrado</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_5">
+   <widget class="QPushButton" name="btnLinha">
     <property name="geometry">
      <rect>
       <x>130</x>
-      <y>250</y>
+      <y>160</y>
       <width>83</width>
       <height>29</height>
      </rect>
@@ -110,29 +84,15 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>MainFrame</class>
+   <class>FramePrincipal</class>
    <extends>QFrame</extends>
-   <header>mainframe.h</header>
+   <header>frameprincipal.h</header>
    <container>1</container>
+   <slots>
+    <slot>desenharObjeto()</slot>
+   </slots>
   </customwidget>
  </customwidgets>
  <resources/>
- <connections>
-  <connection>
-   <sender>pushButton</sender>
-   <signal>clicked()</signal>
-   <receiver>frame</receiver>
-   <slot>draw()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>73</x>
-     <y>512</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>257</x>
-     <y>413</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>
