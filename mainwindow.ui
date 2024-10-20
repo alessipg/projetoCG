@@ -13,86 +13,19 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralwidget">
-   <widget class="FramePrincipal" name="frame">
-    <property name="geometry">
-     <rect>
-      <x>250</x>
-      <y>60</y>
-      <width>501</width>
-      <height>451</height>
-     </rect>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::Shape::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Shadow::Raised</enum>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="btnTriangulo">
-    <property name="geometry">
-     <rect>
-      <x>130</x>
-      <y>80</y>
-      <width>83</width>
-      <height>29</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Triângulo</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="btnQuadrado">
-    <property name="geometry">
-     <rect>
-      <x>130</x>
-      <y>120</y>
-      <width>83</width>
-      <height>29</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Quadrado</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="btnLinha">
-    <property name="geometry">
-     <rect>
-      <x>130</x>
-      <y>160</y>
-      <width>83</width>
-      <height>29</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Linha</string>
-    </property>
-   </widget>
-  </widget>
+  <widget class="QWidget" name="centralwidget"/>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>25</height>
+     <height>26</height>
     </rect>
    </property>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>FramePrincipal</class>
-   <extends>QFrame</extends>
-   <header>frameprincipal.h</header>
-   <container>1</container>
-   <slots>
-    <slot>desenharObjeto()</slot>
-   </slots>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

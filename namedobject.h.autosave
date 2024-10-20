@@ -1,0 +1,20 @@
+#ifndef NAMEDOBJECT_H
+#define NAMEDOBJECT_H
+
+#include <QString>
+#include <QPainter>
+
+// Classe 
+class NamedObject {
+public:
+    NamedObject(const QString& name);
+    virtual ~NamedObject() {}
+
+    QString getName() const { return name; }
+    virtual void draw(QPainter& painter) const = 0;
+
+protected:
+    QString name;
+};
+
+#endif // NAMEDOBJECT_H
