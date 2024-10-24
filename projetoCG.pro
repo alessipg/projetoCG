@@ -14,6 +14,7 @@ SOURCES += \
     frameprincipal.cpp \
     main.cpp \
     mainwindow.cpp \
+    matriz.cpp \
     objeto.cpp \
     ponto.cpp
 
@@ -22,6 +23,7 @@ HEADERS += \
     displayfile.h \
     frameprincipal.h \
     mainwindow.h \
+    matriz.h \
     objeto.h \
     ponto.h
 
