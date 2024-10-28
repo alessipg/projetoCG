@@ -36,7 +36,7 @@ Matriz Matriz::operator*(const Matriz& matriz) const {
         for (int j = 0; j < matriz.getColunas(); j++) {
             for (int k = 0; k < colunas; k++) {
                 resultado(i, j) += dados[i][k] * matriz.dados[k][j];
-            }]
+            }
         }
     }
 

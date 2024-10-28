@@ -8,6 +8,7 @@ public:
     int x;
     int y;
     int cor;
+    int coordW;
 };
 
 #endif // PONTO_H

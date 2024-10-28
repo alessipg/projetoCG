@@ -4,9 +4,9 @@
 class Aresta
 {
 public:
-    Aresta(Ponto a, Ponto b);
-    Ponto a;
-    Ponto b;
+    Aresta(Ponto *a, Ponto *b);
+    Ponto *a;
+    Ponto *b;
 };
 
 #endif // ARESTA_H

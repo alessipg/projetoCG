@@ -20,6 +20,9 @@ MainWindow::MainWindow(QWidget *parent)
         QString buttonText = ui->btnLinha->text();
         ui->frame->desenharObjeto(buttonText);
     });
+    connect(ui->btnTranslacao, &QPushButton::clicked, this, [=](){
+        ui->frame->transladarObjeto();
+    });
 }
 
 MainWindow::~MainWindow()

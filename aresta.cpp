@@ -1,3 +1,3 @@
 #include "aresta.h"
 
-Aresta::Aresta(Ponto a, Ponto b): a(a), b(b){}
+Aresta::Aresta(Ponto *a, Ponto *b): a(a), b(b){}

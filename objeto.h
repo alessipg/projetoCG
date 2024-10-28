@@ -11,6 +11,7 @@ public:
     QString nome;
     QList<Ponto> pontos;
     QList<Aresta> arestas;
+    void translacao(Ponto ponto);
 };
 
 #endif // OBJETO_H
