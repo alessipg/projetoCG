@@ -13,6 +13,7 @@ FramePrincipal::FramePrincipal(QWidget *parent)
 void FramePrincipal::paintEvent(QPaintEvent *event) {
     QFrame::paintEvent(event);
     QPainter painter(this);
+
     //inverte o eixo Y
     painter.translate(0, height()); // Move o ponto de origem para o canto inferior esquerdo
     painter.scale(1, -1);           // Inverte o eixo Y
@@ -21,16 +22,23 @@ void FramePrincipal::paintEvent(QPaintEvent *event) {
     for (Objeto &obj : df.displayFile) {
         if (obj.nome == objetoAlvo) {
             for (Aresta aresta : obj.arestas) {
-                painter.drawLine(aresta.a.x, aresta.a.y, aresta.b.x, aresta.b.y);
-                qDebug() << "a " << aresta.a.x <<aresta.a.y << "b"<<aresta.b.x<< aresta.b.y;
+                painter.drawLine(aresta.a->x, aresta.a->y, aresta.b->x, aresta.b->y);
+                qDebug() << "a " << aresta.a->x <<aresta.a->y << "b"<<aresta.b->x<< aresta.b->y;
             }
+            this->objAtual = &obj;
             break;
         }
     }
 }
+
 void FramePrincipal::desenharObjeto(const QString &buttonText) {
     qDebug().noquote() << "Desenhando objeto:" << buttonText;
-    //armazena o nome do obj que será desenhado
+    // armazena o nome do obj que será desenhado
     objetoAlvo = buttonText;
+    update();
+}
+
+void FramePrincipal::transladarObjeto(){
+    this->objAtual->translacao(Ponto(0,50));
     update();
 }

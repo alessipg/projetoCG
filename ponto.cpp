@@ -1,3 +1,3 @@
 #include "ponto.h"
 
-Ponto::Ponto(int x, int y):x(x), y(y){}
+Ponto::Ponto(int x, int y):x(x), y(y), coordW(1){}
