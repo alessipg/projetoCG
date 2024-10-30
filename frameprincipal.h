@@ -4,11 +4,18 @@
 #include <QFrame>
 #include <QWidget>
 #include <QPushButton>
-#include <iostream>
 #include <QPainter>
+#include <QTextEdit>
+#include <QRegularExpression>
+#include <QString>
+#include <QStringList>
+#include <QTextStream>
+#include <iostream>
 
 #include <aresta.h>
 #include <displayfile.h>
+#include <matriz.h>
+
 
 class FramePrincipal : public QFrame
 {
@@ -17,9 +24,10 @@ public:
     explicit FramePrincipal(QWidget *parent = nullptr);
     void paintEvent(QPaintEvent *event) override;
     DisplayFile df;
+    void processarEntrada(const QString inputText);
 public slots:
     void desenharObjeto(const QString &buttonText);
-    void transladarObjeto();
+    void transformarObjeto(const QString &inputText);
 private:
     //objeto que foi escolhido para ser desenhado
     QString objetoAlvo;

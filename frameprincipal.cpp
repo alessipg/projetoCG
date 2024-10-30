@@ -5,6 +5,10 @@ FramePrincipal::FramePrincipal(QWidget *parent)
 {
     df.gerarObjetos();
 }
+
+/*void processarEntrada(const QString &inputText) {
+}*/
+
 /*Esse método funciona para qualquer objeto, basta ter
  * todas as arestas definidas. Pensei em tratar, por exemplo, o caso do quadrado
  * adicionando 2 construtores: 1 recebendo os 4 pontos e o outro transformando os
@@ -23,7 +27,7 @@ void FramePrincipal::paintEvent(QPaintEvent *event) {
         if (obj.nome == objetoAlvo) {
             for (Aresta aresta : obj.arestas) {
                 painter.drawLine(aresta.a->x, aresta.a->y, aresta.b->x, aresta.b->y);
-                qDebug() << "a " << aresta.a->x <<aresta.a->y << "b"<<aresta.b->x<< aresta.b->y;
+                //qDebug() << "a " << aresta.a->x <<aresta.a->y << "b"<<aresta.b->x<< aresta.b->y;
             }
             this->objAtual = &obj;
             break;
@@ -38,7 +42,52 @@ void FramePrincipal::desenharObjeto(const QString &buttonText) {
     update();
 }
 
-void FramePrincipal::transladarObjeto(){
-    this->objAtual->translacao(Ponto(0,50));
-    update();
+void FramePrincipal::transformarObjeto(const QString &inputText) {
+
+    qDebug().noquote() << "Input:" << inputText;
+
+    static QRegularExpression pattern(R"((\w)\s(-?\d+(\.\d+)?),(-?\d+(\.\d+)?)(?:\s(-?\d+(\.\d+)?))?)");
+    QStringList lines = inputText.split('\n');
+    std::reverse(lines.begin(), lines.end()); // Inverte a ordem das linhas
+
+    Matriz composta(3, 3);
+    composta = Matriz::gerarIdentidade(3,3);
+
+    //dx e dy devem ser as coordenadas do ponto (?)
+    composta = composta * Matriz::translacao(-this->objAtual->pontos[0].x, -this->objAtual->pontos[0].y);
+    composta.imprimir();
+    for (const QString &line : lines) {
+        QRegularExpressionMatch match = pattern.match(line);
+
+        if (match.hasMatch()) {
+            QString op = match.captured(1);      // Operação (ex: "R", "T", "E")
+            float v1 = match.captured(2).toFloat(); // Primeiro valor (ex: "1.5")
+            float v2 = match.captured(4).toFloat(); // Segundo valor (ex: "2.3")
+            float rad = match.captured(5).isEmpty() ? 0 : match.captured(5).toFloat(); // Ângulo (opcional)
+            qDebug().noquote() << op;
+
+            if (op == "R") {
+                composta = composta * Matriz::rotacao(Ponto(v1, v2), rad);
+                qDebug() << "rotaçao";
+                composta.imprimir();
+            } else if (op == "T") {
+                composta = composta * Matriz::translacao(v1, v2);
+                qDebug() << "translacao";
+                composta.imprimir();
+            } else if (op == "E") {
+                composta = composta * Matriz::escalonamento(v1, v2);
+                qDebug() << "escala";
+                composta.imprimir();
+            } else {
+                qDebug() << "Operação desconhecida:" << op;
+            }
+        } else {
+            qDebug() << "A string de entrada não corresponde ao formato esperado.";
+        }
+    }
+    composta = composta * Matriz::translacao(this->objAtual->pontos[0].x, this->objAtual->pontos[0].y);
+
+    this->objAtual->transformarPontos(composta);
+
+    update(); // Atualiza o widget
 }
