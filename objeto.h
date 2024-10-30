@@ -4,6 +4,11 @@
 #include <QList>
 #include <QString>
 #include <aresta.h>
+#include <matriz.h>
+#include <QDebug>
+#include <iostream>
+#include <matriz.h>
+
 class Objeto
 {
 public:
@@ -11,7 +16,7 @@ public:
     QString nome;
     QList<Ponto> pontos;
     QList<Aresta> arestas;
-    void translacao(Ponto ponto);
+    void transformarPontos(Matriz composta);
 };
 
 #endif // OBJETO_H

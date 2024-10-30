@@ -20,12 +20,13 @@ MainWindow::MainWindow(QWidget *parent)
         QString buttonText = ui->btnLinha->text();
         ui->frame->desenharObjeto(buttonText);
     });
-    connect(ui->btnTranslacao, &QPushButton::clicked, this, [=](){
-        ui->frame->transladarObjeto();
+    connect(ui->btnTransformar, &QPushButton::clicked, this, [=](){
+        QString inputText = ui->cmdTrans->toPlainText();
+        ui->frame->transformarObjeto(inputText);
     });
+
 }
 
-MainWindow::~MainWindow()
-{
+MainWindow::~MainWindow() {
     delete ui;
 }

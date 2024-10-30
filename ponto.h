@@ -4,11 +4,11 @@
 class Ponto
 {
 public:
-    Ponto(int x = 0, int y = 0);
-    int x;
-    int y;
+    Ponto(float x = 0, float y = 0);
+    float x;
+    float y;
     int cor;
-    int coordW;
+    float coordW;
 };
 
 #endif // PONTO_H
