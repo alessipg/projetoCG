@@ -56,6 +56,9 @@ void FramePrincipal::transformarObjeto(const QString &inputText) {
     //dx e dy devem ser as coordenadas do ponto (?)
     composta = composta * Matriz::translacao(-this->objAtual->pontos[0].x, -this->objAtual->pontos[0].y);
     //composta.imprimir();
+
+    std::vector<std::pair<float, float>> translacoes;
+
     for (const QString &line : lines) {
         QRegularExpressionMatch match = pattern.match(line);
 
@@ -71,7 +74,8 @@ void FramePrincipal::transformarObjeto(const QString &inputText) {
                 std::cout << "rotaçao"<<endl;
                 composta.imprimir();
             } else if (op == "T") {
-                composta = Matriz::translacao(v1, v2) * composta;
+                /*composta = Matriz::translacao(v1, v2) * composta;*/
+                translacoes.emplace_back(v1,v2);
                 std::cout << "translacao"<<endl;
                 composta.imprimir();
             } else if (op == "E") {
@@ -85,7 +89,12 @@ void FramePrincipal::transformarObjeto(const QString &inputText) {
             qDebug() << "A string de entrada não corresponde ao formato esperado.";
         }
     }
-    composta =Matriz::translacao(this->objAtual->pontos[0].x, this->objAtual->pontos[0].y) * composta;
+
+    composta = Matriz::translacao(this->objAtual->pontos[0].x, this->objAtual->pontos[0].y) * composta;
+
+    for (int i = 0; i < translacoes.size(); ++i) {
+        composta = Matriz::translacao(translacoes[i].first, translacoes[i].second) * composta;
+    }
 
     this->objAtual->transformarPontos(composta);
 
