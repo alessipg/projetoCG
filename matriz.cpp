@@ -82,16 +82,16 @@ Matriz Matriz::translacao(float dx, float dy) {
     return matrizTransl;
 }
 
-Matriz Matriz::rotacao(Ponto p, float rad) {
-
+Matriz Matriz::rotacao(Ponto p, float angulo) {
     Matriz matrizRot(3,3);
     matrizRot = Matriz::gerarIdentidade(3,3);
-
+    double rad = (angulo * PI) / 180;
     matrizRot(0,0) = cos(rad);
     matrizRot(0,1) = -sin(rad);
     matrizRot(1,0) = sin(rad);
     matrizRot(1,1) = cos(rad);
-
+    //std::cout << "matriz rotação "<< rad << cos(rad) <<endl;
+    //matrizRot.imprimir();
     return matrizRot;
 }
 

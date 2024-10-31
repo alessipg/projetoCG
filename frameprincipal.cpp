@@ -1,5 +1,5 @@
 #include "frameprincipal.h"
-
+#include <iostream>
 FramePrincipal::FramePrincipal(QWidget *parent)
     : QFrame{parent}
 {
@@ -55,7 +55,7 @@ void FramePrincipal::transformarObjeto(const QString &inputText) {
 
     //dx e dy devem ser as coordenadas do ponto (?)
     composta = composta * Matriz::translacao(-this->objAtual->pontos[0].x, -this->objAtual->pontos[0].y);
-    composta.imprimir();
+    //composta.imprimir();
     for (const QString &line : lines) {
         QRegularExpressionMatch match = pattern.match(line);
 
@@ -63,20 +63,20 @@ void FramePrincipal::transformarObjeto(const QString &inputText) {
             QString op = match.captured(1);      // Operação (ex: "R", "T", "E")
             float v1 = match.captured(2).toFloat(); // Primeiro valor (ex: "1.5")
             float v2 = match.captured(4).toFloat(); // Segundo valor (ex: "2.3")
-            float rad = match.captured(5).isEmpty() ? 0 : match.captured(5).toFloat(); // Ângulo (opcional)
-            qDebug().noquote() << op;
+            float angulo = match.captured(6).isEmpty() ? 0 : match.captured(6).toFloat(); // Ângulo (opcional)
+            //qDebug().noquote() << op << v1 << v2 << angulo;
 
             if (op == "R") {
-                composta = composta * Matriz::rotacao(Ponto(v1, v2), rad);
-                qDebug() << "rotaçao";
+                composta = Matriz::rotacao(Ponto(v1, v2), angulo) * composta;
+                std::cout << "rotaçao"<<endl;
                 composta.imprimir();
             } else if (op == "T") {
-                composta = composta * Matriz::translacao(v1, v2);
-                qDebug() << "translacao";
+                composta = Matriz::translacao(v1, v2) * composta;
+                std::cout << "translacao"<<endl;
                 composta.imprimir();
             } else if (op == "E") {
-                composta = composta * Matriz::escalonamento(v1, v2);
-                qDebug() << "escala";
+                composta =Matriz::escalonamento(v1, v2)* composta;
+                std::cout << "escala"<<endl;
                 composta.imprimir();
             } else {
                 qDebug() << "Operação desconhecida:" << op;
@@ -85,7 +85,7 @@ void FramePrincipal::transformarObjeto(const QString &inputText) {
             qDebug() << "A string de entrada não corresponde ao formato esperado.";
         }
     }
-    composta = composta * Matriz::translacao(this->objAtual->pontos[0].x, this->objAtual->pontos[0].y);
+    composta =Matriz::translacao(this->objAtual->pontos[0].x, this->objAtual->pontos[0].y) * composta;
 
     this->objAtual->transformarPontos(composta);
 
