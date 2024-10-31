@@ -1,6 +1,6 @@
 #ifndef MATRIZ_H
 #define MATRIZ_H
-
+#define PI 3.141592654
 #include <vector>
 #include "ponto.h"
 
@@ -22,7 +22,7 @@ public:
 
     static Matriz gerarIdentidade(int linhas, int colunas);
     static Matriz translacao(float dx, float dy);
-    static Matriz rotacao(Ponto ponto, float rad);
+    static Matriz rotacao(Ponto ponto, float angulo);
     static Matriz escalonamento(float sx, float sy);
 
     void imprimir() const;

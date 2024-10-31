@@ -31,17 +31,17 @@ void DisplayFile::gerarObjetos(){
 
     //quadrado
     QList<Ponto> pontos3={
+        Ponto(100,100),
         Ponto(100,200),
         Ponto(200,200),
-        Ponto(100,100),
         Ponto(200,100)
     };
 
     QList<Aresta> arestas3 = {
         Aresta(&pontos3[0], &pontos3[1]),
-        Aresta(&pontos3[0], &pontos3[2]),
+        Aresta(&pontos3[1], &pontos3[2]),
         Aresta(&pontos3[2], &pontos3[3]),
-        Aresta(&pontos3[1], &pontos3[3])
+        Aresta(&pontos3[0], &pontos3[3])
     };
 
     Objeto obj3 = {"Quadrado", pontos3, arestas3};
