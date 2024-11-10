@@ -12,6 +12,55 @@
 #include <QTextStream>
 #include <iostream>
 
+#include "aresta.h"
+#include "displayfile.h"
+#include "matriz.h"
+
+class FramePrincipal : public QFrame
+{
+    Q_OBJECT
+public:
+    explicit FramePrincipal(QWidget *parent = nullptr);
+    void paintEvent(QPaintEvent *event) override;
+    DisplayFile df;
+    void processarEntrada(const QString inputText);
+
+public slots:
+    void desenharObjeto(const QString &buttonText);
+    void transformarObjeto(const QString &inputText);
+
+private:
+    float xMin = -100;
+    float xMax = 100;
+    float yMin = -100;
+    float yMax = 100;
+
+    QString objetoAlvo;
+    Objeto *objAtual;
+
+    void transladarWindowParaOrigem();
+};
+
+#endif // FRAMEPRINCIPAL_H
+
+
+
+
+/*
+#ifndef FRAMEPRINCIPAL_H
+#define FRAMEPRINCIPAL_H
+
+#include <QFrame>
+#include <QWidget>
+#include <QPushButton>
+#include <QPainter>
+#include <QTextEdit>
+#include <QRegularExpression>
+#include <QString>
+#include <QStringList>
+#include <QTextStream>
+#include <iostream>
+
 #include <aresta.h>
 #include <displayfile.h>
 #include <matriz.h>
@@ -37,3 +86,4 @@ private:
 };
 
 #endif // FRAMEPRINCIPAL_H
+*/
