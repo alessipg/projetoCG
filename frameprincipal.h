@@ -15,6 +15,7 @@
 #include <aresta.h>
 #include <displayfile.h>
 #include <matriz.h>
+#include <window.h>
 
 
 class FramePrincipal : public QFrame
@@ -25,10 +26,15 @@ public:
     void paintEvent(QPaintEvent *event) override;
     DisplayFile df;
     void processarEntrada(const QString inputText);
+    void centralizarWindow(Window *inputWindow);
+    void corrigirRotacaoWindow(Window *inputWindow);
+    void calcularCoordenadasViewPort(Window *inputWindow);
+    void setupWindow();
 public slots:
     void desenharObjeto(const QString &buttonText);
     void transformarObjeto(const QString &inputText);
 private:
+    Window *window;
     //objeto que foi escolhido para ser desenhado
     QString objetoAlvo;
     //salva o objeto que está desenhado para aplicar a mudança de posição

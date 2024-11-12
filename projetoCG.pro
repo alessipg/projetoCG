@@ -16,7 +16,8 @@ SOURCES += \
     mainwindow.cpp \
     matriz.cpp \
     objeto.cpp \
-    ponto.cpp
+    ponto.cpp \
+    window.cpp
 
 HEADERS += \
     aresta.h \
@@ -25,7 +26,8 @@ HEADERS += \
     mainwindow.h \
     matriz.h \
     objeto.h \
-    ponto.h
+    ponto.h \
+    window.h
 
 FORMS += \
     mainwindow.ui

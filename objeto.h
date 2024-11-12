@@ -17,6 +17,7 @@ public:
     QList<Ponto> pontos;
     QList<Aresta> arestas;
     void transformarPontos(Matriz composta);
+    void transformarPontosWin(Matriz composta);
 };
 
 #endif // OBJETO_H

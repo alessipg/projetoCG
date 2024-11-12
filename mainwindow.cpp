@@ -24,8 +24,8 @@ MainWindow::MainWindow(QWidget *parent)
         QString inputText = ui->cmdTrans->toPlainText();
         ui->frame->transformarObjeto(inputText);
     });
-
 }
+
 
 MainWindow::~MainWindow() {
     delete ui;

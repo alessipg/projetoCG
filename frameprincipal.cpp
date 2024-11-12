@@ -1,5 +1,7 @@
 #include "frameprincipal.h"
 #include <iostream>
+#include <math.h>
+#include <mainwindow.h>
 FramePrincipal::FramePrincipal(QWidget *parent)
     : QFrame{parent}
 {
@@ -100,3 +102,67 @@ void FramePrincipal::transformarObjeto(const QString &inputText) {
 
     update(); // Atualiza o widget
 }
+
+void FramePrincipal::corrigirRotacaoWindow(Window *inputWindow){
+    float mediaXSuperior = (inputWindow->pontos[2].x+inputWindow->pontos[3].x)/2;
+    float mediaYSuperior = (inputWindow->pontos[2].y+inputWindow->pontos[3].y)/2;
+    float dot = 0*mediaXSuperior + 1*mediaYSuperior;
+    float det = 0*mediaYSuperior - 1*mediaXSuperior;
+    float angle = atan2(det, dot);
+
+    Matriz composta(3, 3);
+
+    for (Objeto &obj : df.displayFile) {
+        composta = Matriz::gerarIdentidade(3,3);
+        composta = composta * Matriz::translacao(obj.pontos[0].x,obj.pontos[0].y);
+        composta = composta * Matriz::rotacao(obj.pontos[0],-angle);
+        composta = composta * Matriz::translacao(-(obj.pontos[0].x),-(obj.pontos[0].y));
+        obj.transformarPontosWin(composta);
+    }
+    inputWindow->transformarPontos(Matriz::rotacao(window->centro,-angle));
+}
+
+void FramePrincipal::centralizarWindow(Window *inputWindow){
+
+    Matriz matrizTransladadaWcParaOrigem = Matriz::translacao(-(inputWindow->centro.x),-(inputWindow->centro.y));
+
+    for (Objeto &obj : df.displayFile) {
+        obj.transformarPontosWin(matrizTransladadaWcParaOrigem);
+    }
+        inputWindow->transformarPontos(matrizTransladadaWcParaOrigem);
+
+}
+
+void FramePrincipal::calcularCoordenadasViewPort(Window *inputWindow){
+
+
+
+    float XWMax = 500;
+    float YWMax = 450;
+
+    for (Objeto &obj : df.displayFile) {
+        for(Ponto &pt : obj.pontos){
+            float Xvp = (((pt.x)-0)/(width()-0))*(XWMax-0);
+            float Yvp = (((pt.y)-0)/(height()-0))*(YWMax-0);
+            pt.xWin = Xvp;
+            pt.yWin = Yvp;
+        }
+    }
+}
+
+void FramePrincipal::setupWindow(){
+    QList<Ponto> pontos{
+        Ponto(0,0),
+        Ponto(0,450),
+        Ponto(500,450),
+        Ponto(500,0)
+    };
+    QList<Aresta> arestas = {
+        Aresta(&pontos[0], &pontos[1]),
+        Aresta(&pontos[1], &pontos[2]),
+        Aresta(&pontos[2], &pontos[3]),
+        Aresta(&pontos[0], &pontos[3])
+    };
+    window = new Window("Window",pontos,arestas);
+}
+
