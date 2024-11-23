@@ -36,6 +36,7 @@ public:
     QLabel *label_2;
     QLabel *label_3;
     QLabel *label_4;
+    QPushButton *btnWindow;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -48,7 +49,7 @@ public:
         centralwidget->setObjectName("centralwidget");
         frame = new FramePrincipal(centralwidget);
         frame->setObjectName("frame");
-        frame->setGeometry(QRect(250, 80, 499, 450));
+        frame->setGeometry(QRect(250, 80, 500, 450));
         frame->setFrameShape(QFrame::Shape::StyledPanel);
         frame->setFrameShadow(QFrame::Shadow::Raised);
         frame->setProperty("Width", QVariant(0));
@@ -79,6 +80,9 @@ public:
         label_4 = new QLabel(centralwidget);
         label_4->setObjectName("label_4");
         label_4->setGeometry(QRect(30, 450, 131, 16));
+        btnWindow = new QPushButton(centralwidget);
+        btnWindow->setObjectName("btnWindow");
+        btnWindow->setGeometry(QRect(24, 470, 83, 31));
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
@@ -104,6 +108,7 @@ public:
         label_2->setText(QCoreApplication::translate("MainWindow", "Ex: R 0.2,1.8 3", nullptr));
         label_3->setText(QCoreApplication::translate("MainWindow", "Ex: T 4,2.5", nullptr));
         label_4->setText(QCoreApplication::translate("MainWindow", "Ex: E 3.4,0.3", nullptr));
+        btnWindow->setText(QCoreApplication::translate("MainWindow", "Window", nullptr));
     } // retranslateUi
 
 };

@@ -24,6 +24,10 @@ MainWindow::MainWindow(QWidget *parent)
         QString inputText = ui->cmdTrans->toPlainText();
         ui->frame->transformarObjeto(inputText);
     });
+    connect(ui->btnWindow, &QPushButton::clicked, this, [=](){
+        QString inputText = ui->cmdTrans->toPlainText();
+        ui->frame->transformarWindow(inputText);
+    });
 }
 
 

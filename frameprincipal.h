@@ -30,7 +30,11 @@ public:
     void corrigirRotacaoWindow(Window *inputWindow);
     void calcularCoordenadasViewPort(Window *inputWindow);
     void setupWindow();
+    void escalonarPontos();
+    void rotinaWindow();
+    void rotinaAtualizacaoWindow();
 public slots:
+    void transformarWindow(const QString &inputText);
     void desenharObjeto(const QString &buttonText);
     void transformarObjeto(const QString &inputText);
 private:
