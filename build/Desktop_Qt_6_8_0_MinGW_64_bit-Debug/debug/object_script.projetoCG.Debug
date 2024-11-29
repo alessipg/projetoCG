@@ -1,0 +1,11 @@
+debug/aresta.o
+debug/displayfile.o
+debug/frameprincipal.o
+debug/main.o
+debug/mainwindow.o
+debug/matriz.o
+debug/objeto.o
+debug/ponto.o
+debug/window.o
+debug/moc_frameprincipal.o
+debug/moc_mainwindow.o
