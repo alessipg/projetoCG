@@ -26,15 +26,14 @@ public:
     void paintEvent(QPaintEvent *event) override;
     DisplayFile df;
     void processarEntrada(const QString inputText);
-    void centralizarWindow(Window *inputWindow);
-    void corrigirRotacaoWindow(Window *inputWindow);
-    void calcularCoordenadasViewPort(Window *inputWindow);
-    void setupWindow();
-    void escalonarPontos();
-    void rotinaWindow();
-    void rotinaAtualizacaoWindow();
-public slots:
-    void transformarWindow(const QString &inputText);
+    void escalonarPontos();//window
+    void rotinaWindow();//window e redundante
+    void centralizarWindow(Window *inputWindow); //window
+    void corrigirRotacaoWindow(Window *inputWindow);//window
+    void calcularCoordenadasViewPort(Window *inputWindow);//window
+    void setupWindow();//window
+   public slots:
+    void transformarWindow(const QString &inputText);//window, usar o slot apenas para chamar da window
     void desenharObjeto(const QString &buttonText);
     void transformarObjeto(const QString &inputText);
 private:

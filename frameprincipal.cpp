@@ -334,18 +334,4 @@ void FramePrincipal::setupWindow(){
     this->window = new Window("Window",pontos,arestas);
 }
 
-void FramePrincipal::rotinaWindow(){
-    this->centralizarWindow(this->window);
-    this->corrigirRotacaoWindow(this->window);
-    this->escalonarPontos();
-    this->calcularCoordenadasViewPort(this->window);
-}
-
-void FramePrincipal::rotinaAtualizacaoWindow(){
-    this->centralizarWindow(this->window);
-    this->corrigirRotacaoWindow(this->window);
-    this->escalonarPontos();
-    this->calcularCoordenadasViewPort(this->window);
-}
-
 

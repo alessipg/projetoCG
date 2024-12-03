@@ -5,4 +5,6 @@ Window::Window(QString nome, QList<Ponto> pontos, QList<Aresta> arestas) : Objet
     centro.y = (pontos[0].y + pontos[2].y)/2;
     altura = pontos[1].y - pontos[0].y;
     largura = pontos[2].x - pontos[1].x;
+
+
 }

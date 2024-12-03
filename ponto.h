@@ -11,6 +11,9 @@ public:
     float xWin; //coordenadas virtuais
     float yWin; //
     float coordWWin;//
+    float xScn;//coordenadas normalizadas
+    float yScn;//
+    float coordWScn;//
     int cor;
 };
 
