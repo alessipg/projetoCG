@@ -64,15 +64,6 @@ Matriz Matriz::gerarIdentidade(int linhas, int colunas) {
 }
 
 Matriz Matriz::translacao(float dx, float dy) {
-    //implementei sem utilizar matrizes, a Helena vai alterar essa abordagem
-    /*qDebug() << "Movendo o objeto com deslocamento:" << p.x << p.y;
-    for (Ponto &ponto : this->pontos) {
-        ponto.x += p.x;
-        ponto.y += p.y;
-        qDebug() << "Novo ponto:" << ponto.x << ponto.y;
-    }*/
-
-    //implementaçao com matrizes
     Matriz matrizTransl(3,3);
     matrizTransl = Matriz::gerarIdentidade(3,3);
 
@@ -90,8 +81,6 @@ Matriz Matriz::rotacao(Ponto p, float angulo) {
     matrizRot(0,1) = -sin(rad);
     matrizRot(1,0) = sin(rad);
     matrizRot(1,1) = cos(rad);
-    //std::cout << "matriz rotação "<< rad << cos(rad) <<endl;
-    //matrizRot.imprimir();
     return matrizRot;
 }
 
@@ -102,15 +91,8 @@ Matriz Matriz::escalonamento(float sx, float sy) {
 
     matrizEsc(0,0) = sx;
     matrizEsc(1,1) = sy;
-
     return matrizEsc;
 }
-
-
-/*Matriz Matriz::gerarComposta() {
-
-}*/
-
 
 // Função para imprimir a matriz
 void Matriz::imprimir() const {

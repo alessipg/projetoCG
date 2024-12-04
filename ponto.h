@@ -12,6 +12,8 @@ public:
     float yWin; //
     float coordWWin;//
     int cor;
+    bool rc[4];//clipping
+    void calcularOutcode(float xmin, float xmax, float ymin, float ymax) ;
 };
 
 #endif // PONTO_H
