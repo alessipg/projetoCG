@@ -147,13 +147,13 @@
      <string>Ex: E 3.4,0.3</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="btnWindow">
+   <widget class="QCheckBox" name="cbWindow">
     <property name="geometry">
      <rect>
-      <x>24</x>
-      <y>470</y>
-      <width>83</width>
-      <height>31</height>
+      <x>120</x>
+      <y>200</y>
+      <width>93</width>
+      <height>26</height>
      </rect>
     </property>
     <property name="text">

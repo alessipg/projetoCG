@@ -24,6 +24,7 @@ public:
     static Matriz translacao(float dx, float dy);
     static Matriz rotacao(Ponto ponto, float angulo);
     static Matriz escalonamento(float sx, float sy);
+    static Matriz gerarViewport();
 
     void imprimir() const;
 };
