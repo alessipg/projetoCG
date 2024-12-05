@@ -39,12 +39,15 @@ void DisplayFile::gerarObjetos() {
     QList<Ponto*> pontos2 = {
         new Ponto(50, 50),
         new Ponto(200, 200),
-        new Ponto(300, 50)
+        new Ponto(200, 200),
+        new Ponto(300, 50),
+        new Ponto(300, 50),
+        new Ponto(50, 50)
     };
     QList<Aresta*> arestas2 = {
         new Aresta(pontos2[0], pontos2[1]),
-        new Aresta(pontos2[0], pontos2[2]),
-        new Aresta(pontos2[1], pontos2[2])
+        new Aresta(pontos2[2], pontos2[3]),
+        new Aresta(pontos2[4], pontos2[5])
     };
     Objeto* obj2 = new Objeto{"Triângulo", pontos2, arestas2};
     this->displayFile.append(obj2);
@@ -53,22 +56,26 @@ void DisplayFile::gerarObjetos() {
     QList<Ponto*> pontos3 = {
         new Ponto(100, 100),
         new Ponto(100, 200),
+        new Ponto(100, 200),
         new Ponto(200, 200),
-        new Ponto(200, 100)
+        new Ponto(200, 200),
+        new Ponto(200, 100),
+        new Ponto(200, 100),
+        new Ponto(100, 100),
     };
     QList<Aresta*> arestas3 = {
         new Aresta(pontos3[0], pontos3[1]),
-        new Aresta(pontos3[1], pontos3[2]),
         new Aresta(pontos3[2], pontos3[3]),
-        new Aresta(pontos3[0], pontos3[3])
+        new Aresta(pontos3[4], pontos3[5]),
+        new Aresta(pontos3[6], pontos3[7])
     };
     Objeto* obj3 = new Objeto{"Quadrado", pontos3, arestas3};
     this->displayFile.append(obj3);
 }
 
 void DisplayFile::aplicarClipping(){
-    for(Objeto* obj : this->displayFile){
-            for (Aresta* aresta : obj->arestas) {
+    for(int i = 1;i<this->displayFile.length();i++){
+            for (Aresta* aresta : this->displayFile[i]->arestas) {
                 aresta->clipping(this->displayFile[0]->pontos[0]->xWin,
                                  this->displayFile[0]->pontos[2]->xWin,
                                  this->displayFile[0]->pontos[0]->yWin,

@@ -161,7 +161,7 @@ void FramePrincipal::rotinaWindow(){
     }
     //angulo (viewUp,Y)
     double angulo = anguloViewUp();
-    //qDebug() << angulo;
+    qDebug() << angulo;
     Matriz composta(3,3);
     composta = Matriz::gerarIdentidade(3,3);
     composta = Matriz::translacao(-window->centro->x,-window->centro->y) * composta;
@@ -211,4 +211,3 @@ double FramePrincipal::anguloViewUp() {
 
     return angulo;
 }
-
