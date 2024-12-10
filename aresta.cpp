@@ -6,7 +6,6 @@ Aresta::Aresta(Ponto *a, Ponto *b): a(a), b(b), desenha(true){
 bool Aresta::clipping(float xmin, float xmax, float ymin, float ymax) {
     // Clipping de Linhas
 
-
     // Calcula os outcodes dos extremos da aresta
     a->calcularOutcode(xmin, xmax, ymin, ymax);
     b->calcularOutcode(xmin, xmax, ymin, ymax);
@@ -36,11 +35,15 @@ bool Aresta::clipping(float xmin, float xmax, float ymin, float ymax) {
 
         if (outcodeOut & 0b1000) {
             // Acima
-            p->xWin += (1 / m) * (ymax - p->yWin);
+            if (m != 0) {
+                p->xWin += (1 / m) * (ymax - p->yWin);
+            }
             p->yWin = ymax;
         } else if (outcodeOut & 0b0100) {
             // Abaixo
-            p->xWin += (1 / m) * (ymin - p->yWin);
+            if (m != 0) {
+                p->xWin += (1 / m) * (ymin - p->yWin);
+            }
             p->yWin = ymin;
         } else if (outcodeOut & 0b0010) {
             // Direita

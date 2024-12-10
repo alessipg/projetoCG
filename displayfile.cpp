@@ -38,10 +38,10 @@ void DisplayFile::gerarObjetos() {
     // Triângulo
     QList<Ponto*> pontos2 = {
         new Ponto(50, 50),
-        new Ponto(200, 200),
-        new Ponto(200, 200),
         new Ponto(300, 50),
         new Ponto(300, 50),
+        new Ponto(200, 200),
+        new Ponto(200, 200),
         new Ponto(50, 50)
     };
     QList<Aresta*> arestas2 = {
@@ -55,13 +55,13 @@ void DisplayFile::gerarObjetos() {
     // Quadrado
     QList<Ponto*> pontos3 = {
         new Ponto(100, 100),
-        new Ponto(100, 200),
-        new Ponto(100, 200),
-        new Ponto(200, 200),
-        new Ponto(200, 200),
         new Ponto(200, 100),
         new Ponto(200, 100),
-        new Ponto(100, 100),
+        new Ponto(200, 200),
+        new Ponto(200, 200),
+        new Ponto(100, 200),
+        new Ponto(100, 200),
+        new Ponto(100, 100)
     };
     QList<Aresta*> arestas3 = {
         new Aresta(pontos3[0], pontos3[1]),
@@ -74,6 +74,8 @@ void DisplayFile::gerarObjetos() {
 }
 
 void DisplayFile::aplicarClipping(){
+    // Aqui está aplicando em todos os objetos do displayfile, talvez
+    // tenha que mudar isso lá na frente
     for(int i = 1;i<this->displayFile.length();i++){
             for (Aresta* aresta : this->displayFile[i]->arestas) {
                 aresta->clipping(this->displayFile[0]->pontos[0]->xWin,

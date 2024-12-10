@@ -161,30 +161,34 @@ void FramePrincipal::rotinaWindow(){
     }
     //angulo (viewUp,Y)
     double angulo = anguloViewUp();
-    qDebug() << angulo;
+
+    // Normalização
     Matriz composta(3,3);
     composta = Matriz::gerarIdentidade(3,3);
     composta = Matriz::translacao(-window->centro->x,-window->centro->y) * composta;
     composta = Matriz::rotacao(*window->centro,angulo) * composta;
     //precisa alinhar a window com os eixos para o clipping
+
+    //aplicar SCN
+    composta = Matriz::escalonamento(2/window->getLargura(),2/window->getAltura())  * composta;
+
     df.transformada(composta);
 
     df.aplicarClipping();
-
-    //reduzi a VP em 40px para observar o clipping
-    double escalaX = LARGURA_VP/window->getLargura();//largura da vp/largura da window
-    double escalaY = ALTURA_VP/window->getAltura();//altura da vp/altura da window
-
-    //inverte valor Y para corrigir o eixo
+    // transformada de VP
     Matriz composta2(3,3);
     composta2 = Matriz::gerarIdentidade(3,3);
-    composta2 = Matriz::escalonamento(escalaX,-escalaY) * composta2;
+    composta2 = Matriz::translacao(1,1) * composta2;
+    composta2 = Matriz::escalonamento(0.5,0.5)* composta2;
+    composta2 = Matriz::escalonamento(1,-1) * composta2;
+    composta2 = Matriz::translacao(0,1) * composta2;
+    composta2 = Matriz::escalonamento(LARGURA_VP,ALTURA_VP) * composta2;
 
-    //translacao para o centro da vp
-    composta2 = Matriz::translacao(250,225) *composta2;
+    //translacao para o centro da vp [visualizar o clipping]
+    composta2 = Matriz::translacao(20,20) *composta2;
 
-    //trata da atualização dos valores em coordenadas SNC e aplica-as
     df.transformada(composta2);
+
     update();
 }
 
