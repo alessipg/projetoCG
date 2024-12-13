@@ -18,9 +18,9 @@
     <property name="geometry">
      <rect>
       <x>250</x>
-      <y>80</y>
+      <y>39</y>
       <width>500</width>
-      <height>450</height>
+      <height>491</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -167,7 +167,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>25</height>
+     <height>24</height>
     </rect>
    </property>
   </widget>

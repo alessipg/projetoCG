@@ -69,6 +69,7 @@ void DisplayFile::gerarObjetos() {
         new Aresta(pontos3[4], pontos3[5]),
         new Aresta(pontos3[6], pontos3[7])
     };
+
     Objeto* obj3 = new Objeto{"Quadrado", pontos3, arestas3};
     this->displayFile.append(obj3);
 }
