@@ -1,4 +1,7 @@
 #include "displayfile.h"
+#include <QFile>
+#include <QTextStream>
+#include <QStringList>
 
 DisplayFile::DisplayFile() {
 }
@@ -100,3 +103,55 @@ DisplayFile::~DisplayFile() {
     }
     displayFile.clear();
 }
+
+void DisplayFile::carregarArquivo() {
+    QFile file(QString::fromUtf8("C://Comp.Gráfica/Charizard.txt"));
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qWarning() << "Erro ao abrir o arquivo:" <<;
+        return;
+    }
+
+    QList<Ponto*> vertices;
+    QList<Aresta*> arestas;
+    QList<QList<int>> faces; // Para armazenar índices de faces temporariamente
+
+    QTextStream in(&file);
+    while (!in.atEnd()) {
+        QString line = in.readLine().trimmed();
+        QStringList parts = line.split(" ", Qt::SkipEmptyParts);
+
+        if (parts.isEmpty()) continue;
+
+        if (parts[0] == "v") {
+            // Vértices
+            float x = parts[1].toFloat();
+            float y = parts[2].toFloat();
+            float z = parts[3].toFloat(); // Pode ser ignorado se só precisar de 2D
+            vertices.append(new Ponto(x, y));
+        } else if (parts[0] == "f") {
+            // Faces
+            QList<int> faceIndices;
+            for (int i = 1; i < parts.size(); ++i) {
+                QString vertexData = parts[i];
+                int vertexIndex = vertexData.split("/")[0].toInt() - 1; // Indexando os vértices
+                faceIndices.append(vertexIndex);
+            }
+            faces.append(faceIndices);
+        }
+    }
+
+    // Criar arestas e adicionar ao displayFile
+    for (const QList<int>& face : faces) {
+        QList<Aresta*> faceArestas;
+        for (int i = 0; i < face.size(); ++i) {
+            int startIdx = face[i];
+            int endIdx = face[(i + 1) % face.size()];
+            faceArestas.append(new Aresta(vertices[startIdx], vertices[endIdx]));
+        }
+        Objeto* obj = new Objeto("Face", vertices, faceArestas);
+        displayFile.append(obj);
+    }
+
+    file.close();
+}
+
