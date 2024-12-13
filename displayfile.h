@@ -12,6 +12,8 @@ public:
     void gerarObjetos();
     void transformada(Matriz composta);
     void aplicarClipping();
+    void carregarArquivo();
+
 };
 
 #endif // DISPLAYFILE_H
