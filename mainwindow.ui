@@ -160,6 +160,19 @@
      <string>Window</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="btnPokemon">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>40</y>
+      <width>100</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Pokemon</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

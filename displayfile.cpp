@@ -75,6 +75,10 @@ void DisplayFile::gerarObjetos() {
 
     Objeto* obj3 = new Objeto{"Quadrado", pontos3, arestas3};
     this->displayFile.append(obj3);
+
+    carregarArquivo();
+
+    imprimirObjetos();
 }
 
 void DisplayFile::aplicarClipping(){
@@ -105,17 +109,19 @@ DisplayFile::~DisplayFile() {
 }
 
 void DisplayFile::carregarArquivo() {
-    QFile file(QString::fromUtf8("C://Comp.Gráfica/Charizard.txt"));
+
+    QFile file(QString::fromUtf8("/Users/helenarentschler/Desktop/box.obj"));
+
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qWarning() << "Erro ao abrir o arquivo:" <<;
+        qWarning() << "Erro ao abrir o arquivo:";
         return;
     }
 
-    QList<Ponto*> vertices;
-    QList<Aresta*> arestas;
-    QList<QList<int>> faces; // Para armazenar índices de faces temporariamente
+    QList<Ponto*> vertices;  // Lista de todos os vértices únicos
+    QList<Aresta*> arestas;  // Lista de todas as arestas
 
     QTextStream in(&file);
+
     while (!in.atEnd()) {
         QString line = in.readLine().trimmed();
         QStringList parts = line.split(" ", Qt::SkipEmptyParts);
@@ -123,35 +129,71 @@ void DisplayFile::carregarArquivo() {
         if (parts.isEmpty()) continue;
 
         if (parts[0] == "v") {
-            // Vértices
+            // Leitura de vértices
             float x = parts[1].toFloat();
             float y = parts[2].toFloat();
-            float z = parts[3].toFloat(); // Pode ser ignorado se só precisar de 2D
+            float z = parts[3].toFloat(); // Pode ser ignorado para 2D
             vertices.append(new Ponto(x, y));
         } else if (parts[0] == "f") {
-            // Faces
-            QList<int> faceIndices;
+            // Construção de arestas duplicando vértices
+            QList<Ponto*> faceVertices;
+
             for (int i = 1; i < parts.size(); ++i) {
                 QString vertexData = parts[i];
-                int vertexIndex = vertexData.split("/")[0].toInt() - 1; // Indexando os vértices
-                faceIndices.append(vertexIndex);
+                int vertexIndex = vertexData.split("/")[0].toInt() - 1; // Índices começam em 1 no .obj
+                if (vertexIndex < 0 || vertexIndex >= vertices.size()) continue;
+
+                // Duplicar o vértice para a aresta
+                Ponto* pontoDuplicado = new Ponto(vertices[vertexIndex]->xWin,
+                                                  vertices[vertexIndex]->yWin);
+                faceVertices.append(pontoDuplicado);
+
+                // Conectar com o próximo vértice
+                if (i > 1) {
+                    arestas.append(new Aresta(faceVertices[i - 2], pontoDuplicado));
+                }
             }
-            faces.append(faceIndices);
+
+            // Fechar a face se for um polígono
+            if (!faceVertices.isEmpty()) {
+                arestas.append(new Aresta(faceVertices.last(), faceVertices.first()));
+            }
         }
     }
 
-    // Criar arestas e adicionar ao displayFile
-    for (const QList<int>& face : faces) {
-        QList<Aresta*> faceArestas;
-        for (int i = 0; i < face.size(); ++i) {
-            int startIdx = face[i];
-            int endIdx = face[(i + 1) % face.size()];
-            faceArestas.append(new Aresta(vertices[startIdx], vertices[endIdx]));
-        }
-        Objeto* obj = new Objeto("Face", vertices, faceArestas);
-        displayFile.append(obj);
-    }
+    // Criar o único Objeto e adicionar ao displayFile
+    Objeto* obj = new Objeto("Pokemon", vertices, arestas);
+    this->displayFile.append(obj);
+    qDebug() << "Objeto 'Pokemon' adicionado ao DisplayFile.";
+
 
     file.close();
+}
+
+void DisplayFile::imprimirObjetos() const {
+    int objetoIndex = 0;
+
+    for (const Objeto* obj : displayFile) {
+        qDebug() << "Objeto" << objetoIndex++ << ":" << obj->nome;
+
+        // Imprimir pontos
+        qDebug() << "  Pontos:";
+        int pontoIndex = 0;
+        for (const Ponto* ponto : obj->pontos) {
+            qDebug() << "    Ponto" << pontoIndex++ << ": ("
+                     << ponto->xWin << "," << ponto->yWin << ")";
+        }
+
+        // Imprimir arestas
+        qDebug() << "  Arestas:";
+        int arestaIndex = 0;
+        for (const Aresta* aresta : obj->arestas) {
+            qDebug() << "    Aresta" << arestaIndex++ << ": ("
+                     << "Ponto1: (" << aresta->a->xWin << ","
+                     << aresta->a->yWin << "),"
+                     << "Ponto2: (" << aresta->b->xWin << ","
+                     << aresta->b->yWin << "))";
+        }
+    }
 }
 

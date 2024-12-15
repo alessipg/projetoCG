@@ -13,7 +13,7 @@ public:
     void transformada(Matriz composta);
     void aplicarClipping();
     void carregarArquivo();
-
+    void imprimirObjetos() const;
 };
 
 #endif // DISPLAYFILE_H
