@@ -94,7 +94,7 @@ void FramePrincipal::transformarObjeto(const QString &inputText) {
     QStringList lines = inputText.split('\n');
     std::reverse(lines.begin(), lines.end()); // Inverte a ordem das linhas
 
-    Matriz composta(3, 3);
+    Matriz composta(4, 4);
     composta = Matriz::gerarIdentidade(3,3);
     // se a checkbox está marcada, alteramos o obj a ser transformado para window
     if(isWindow){
@@ -165,8 +165,8 @@ void FramePrincipal::rotinaWindow(){
     // Normalização
     Matriz composta(3,3);
     composta = Matriz::gerarIdentidade(3,3);
-    composta = Matriz::translacao(-window->centro->x,-window->centro->y) * composta;
-    composta = Matriz::rotacao(*window->centro,angulo) * composta;
+    composta = Matriz::translacao(-window->VRP->x,-window->VRP->y) * composta;
+    composta = Matriz::rotacao(*window->VRP,angulo) * composta;
     //precisa alinhar a window com os eixos para o clipping
 
     //aplicar SCN
@@ -184,7 +184,7 @@ void FramePrincipal::rotinaWindow(){
     composta2 = Matriz::translacao(0,1) * composta2;
     composta2 = Matriz::escalonamento(LARGURA_VP,ALTURA_VP) * composta2;
 
-    //translacao para o centro da vp [visualizar o clipping]
+    //translacao para o centro(VRP) da vp [visualizar o clipping]
     composta2 = Matriz::translacao(20,20) *composta2;
 
     df.transformada(composta2);
@@ -192,7 +192,7 @@ void FramePrincipal::rotinaWindow(){
     update();
 }
 
-double FramePrincipal::anguloViewUp() {
+double FramePrincipal::anguloViewUp() {/// ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR
     // Coleta as coordenadas do centro da janela
     double centroX = window->centro->x;
     double centroY = window->centro->y;

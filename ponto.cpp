@@ -1,6 +1,6 @@
 #include "ponto.h"
 
-Ponto::Ponto(float x, float y):x(x), y(y), xWin(x),yWin(y),coordW(1),coordWWin(1){
+Ponto::Ponto(float x, float y):x(x), y(y), z(z), xWin(x), yWin(y), zWin(z), coordW(1), coordWWin(1){
     for (int i = 0; i < 4; i++) {
         rc[i] = false;
     }

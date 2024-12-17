@@ -7,9 +7,11 @@ public:
     Ponto(float x = 0, float y = 0);
     float x;
     float y;
+    float z;
     float coordW;
     float xWin; //coordenadas virtuais
     float yWin; //
+    float zWin;
     float coordWWin;//
     int cor;
     bool rc[4];//clipping

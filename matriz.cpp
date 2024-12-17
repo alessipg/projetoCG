@@ -64,17 +64,18 @@ Matriz Matriz::gerarIdentidade(int linhas, int colunas) {
 }
 
 Matriz Matriz::translacao(float dx, float dy) {
-    Matriz matrizTransl(3,3);
-    matrizTransl = Matriz::gerarIdentidade(3,3);
+    Matriz matrizTransl(4,4);
+    matrizTransl = Matriz::gerarIdentidade(4,4);
 
-    matrizTransl(0,2) = dx;
-    matrizTransl(1,2) = dy;
+    matrizTransl(0,3) = dx;
+    matrizTransl(1,3) = dy;
+    matrizTransl(2,3) = dz;
 
     return matrizTransl;
 }
 
-Matriz Matriz::rotacao(Ponto p, float angulo) {
-    Matriz matrizRot(3,3);
+Matriz Matriz::rotacao(Ponto p, float angulo) { // ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR
+
     matrizRot = Matriz::gerarIdentidade(3,3);
     double rad = (angulo * PI) / 180;
     matrizRot(0,0) = cos(rad);
@@ -86,11 +87,12 @@ Matriz Matriz::rotacao(Ponto p, float angulo) {
 
 Matriz Matriz::escalonamento(float sx, float sy) {
 
-    Matriz matrizEsc(3,3);
-    matrizEsc = Matriz::gerarIdentidade(3,3);
+    Matriz matrizEsc(4,4);
+    matrizEsc = Matriz::gerarIdentidade(4,4);
 
     matrizEsc(0,0) = sx;
     matrizEsc(1,1) = sy;
+    matrizEsc(2,2) = sz;
     return matrizEsc;
 }
 
