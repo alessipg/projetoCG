@@ -8,6 +8,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     // Conectar o botão ao slot passando o texto como parâmetro
     //não consegui usar a interface do QTCreator para passar parâmetros
+    connect(ui->btnPokemon, &QPushButton::clicked, this, [=]() {
+        QString buttonText = ui->btnPokemon->text();
+        ui->frame->desenharObjeto(buttonText);
+    });
     connect(ui->btnQuadrado, &QPushButton::clicked, this, [=]() {
         QString buttonText = ui->btnQuadrado->text();
         ui->frame->desenharObjeto(buttonText);
