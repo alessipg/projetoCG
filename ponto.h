@@ -4,7 +4,7 @@
 class Ponto
 {
 public:
-    Ponto(float x = 0, float y = 0);
+    Ponto(float x = 0, float y = 0, float z = 0);
     float x;
     float y;
     float z;

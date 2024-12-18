@@ -1,7 +1,7 @@
 #include "window.h"
 
 Window::Window(QString nome, QList<Ponto*> pontos, QList<Aresta*> arestas) : Objeto(nome,pontos,arestas){
-    Ponto *VRP = new Ponto((pontos[0]->x + pontos[2]->x,)/2,
+    Ponto *VRP = new Ponto((pontos[0]->x + pontos[2]->x)/2,
                       (pontos[0]->y + pontos[2]->y)/2, (pontos[0]->z + pontos[2]->z)/2);
     this->pontos.append(VRP);
     this->VRP = VRP;

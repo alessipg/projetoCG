@@ -38,7 +38,7 @@ public:
     void calcularCoordenadasViewPort(Window *inputWindow);
     void escalonarPontos();
     void rotinaWindow();
-    double anguloViewUp();
+    std::tuple<double, double, double> anguloVPN();
     Window *window;
     //objeto que foi escolhido para ser desenhado
     QString objetoAlvo;

@@ -59,11 +59,12 @@ Matriz Matriz::gerarIdentidade(int linhas, int colunas) {
             }
         }
     }
+    identidade.imprimir();
 
     return identidade;
 }
 
-Matriz Matriz::translacao(float dx, float dy) {
+Matriz Matriz::translacao(float dx, float dy, float dz) {
     Matriz matrizTransl(4,4);
     matrizTransl = Matriz::gerarIdentidade(4,4);
 
@@ -74,18 +75,47 @@ Matriz Matriz::translacao(float dx, float dy) {
     return matrizTransl;
 }
 
-Matriz Matriz::rotacao(Ponto p, float angulo) { // ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR
+Matriz Matriz::rotacaoX(Ponto p, float angulo) { // ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR
 
-    matrizRot = Matriz::gerarIdentidade(3,3);
+    Matriz matrizRot = Matriz::gerarIdentidade(4,4);
+    double rad = (angulo * PI) / 180;
+    matrizRot(1,1) = cos(rad);
+    matrizRot(1,2) = -sin(rad);
+    matrizRot(2,1) = sin(rad);
+    matrizRot(2,2) = cos(rad);
+    cout << "\nRotacao X\n";
+    matrizRot.imprimir();
+    return matrizRot;
+
+}
+
+Matriz Matriz::rotacaoY(Ponto p, float angulo) { // ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR
+
+    Matriz matrizRot = Matriz::gerarIdentidade(4,4);
+    double rad = (angulo * PI) / 180;
+    matrizRot(0,0) = cos(rad);
+    matrizRot(2,0) = -sin(rad);
+    matrizRot(0,2) = sin(rad);
+    matrizRot(2,2) = cos(rad);
+    cout << "\nRotacao Y\n";
+    matrizRot.imprimir();
+    return matrizRot;
+}
+
+Matriz Matriz::rotacaoZ(Ponto p, float angulo) { // ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR
+
+    Matriz matrizRot = Matriz::gerarIdentidade(4,4);
     double rad = (angulo * PI) / 180;
     matrizRot(0,0) = cos(rad);
     matrizRot(0,1) = -sin(rad);
     matrizRot(1,0) = sin(rad);
     matrizRot(1,1) = cos(rad);
+    cout << "\nRotacao Z\n";
+    matrizRot.imprimir();
     return matrizRot;
 }
 
-Matriz Matriz::escalonamento(float sx, float sy) {
+Matriz Matriz::escalonamento(float sx, float sy, float sz) {
 
     Matriz matrizEsc(4,4);
     matrizEsc = Matriz::gerarIdentidade(4,4);

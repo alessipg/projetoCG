@@ -2,7 +2,11 @@
 #include "objeto.h"
 
 Objeto::Objeto(QString nome, QList<Ponto*> pontos, QList<Aresta*> arestas) :
-    nome(nome), pontos(pontos), arestas(arestas) {}
+    nome(nome), pontos(pontos), arestas(arestas) {
+    this->centro.x = calcularCentro()->x;
+    this->centro.y = calcularCentro()->y;
+    this->centro.z = calcularCentro()->z;
+}
 
 void Objeto::transformarPontos(Matriz composta){
 
@@ -82,6 +86,25 @@ void Objeto::clipping(float xmin,float xmax, float ymin, float ymax){
         }
     }
 
+}
+
+Ponto* Objeto::calcularCentro(){
+    if (this->pontos.isEmpty()) return NULL;
+    else {
+        double centroX = 0;
+        double centroY = 0;
+        double centroZ = 0;
+
+         for (int i = 0; i < this->pontos.length(); ++i) {
+            centroX += this->pontos[i]->x;
+            centroY += this->pontos[i]->y;
+            centroZ += this->pontos[i]->z;
+         }
+         centroX /= this->pontos.length();
+         centroY /= this->pontos.length();
+         centroZ /= this->pontos.length();
+        return new Ponto (centroX,centroY,centroZ);
+    }
 }
 
 Objeto::~Objeto() {

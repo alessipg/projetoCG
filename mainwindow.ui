@@ -118,14 +118,14 @@
      </rect>
     </property>
     <property name="text">
-     <string>Ex: R 0.2,1.8 3</string>
+     <string>Ex: RX 0.2,1.8 3</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_3">
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>430</y>
+      <y>450</y>
       <width>131</width>
       <height>16</height>
      </rect>
@@ -138,7 +138,7 @@
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>450</y>
+      <y>470</y>
       <width>131</width>
       <height>16</height>
      </rect>
@@ -173,6 +173,19 @@
      <string>Pokemon</string>
     </property>
    </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>430</y>
+      <width>131</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Ex: RZ 1.5,1.8 3</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -180,7 +193,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>24</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
