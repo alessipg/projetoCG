@@ -14,7 +14,7 @@ void Objeto::transformarPontos(Matriz composta){
     //composta.imprimir();
     for (int i = 0; i < this->pontos.length(); ++i) {
 
-        Matriz matrizPonto(3,1);
+        Matriz matrizPonto(4,1);
         matrizPonto(0,0) = this->pontos[i]->x;
         matrizPonto(1,0) = this->pontos[i]->y;
         matrizPonto(2,0) = this->pontos[i]->z;
@@ -37,7 +37,7 @@ void Objeto::transformarPontosWin(Matriz composta){ //exatamente igual à acima,
     //std::cout << "composta"<<endl;
     //composta.imprimir();
     for (int i = 0; i < this->pontos.length(); ++i) {
-        Matriz matrizPonto(3,1);
+        Matriz matrizPonto(4,1);
         matrizPonto(0,0) = this->pontos[i]->xWin;
         matrizPonto(1,0) = this->pontos[i]->yWin;
         matrizPonto(2,0) = this->pontos[i]->zWin;

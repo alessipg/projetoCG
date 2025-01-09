@@ -16,7 +16,7 @@ void DisplayFile::gerarObjetos() {
         new Ponto(0,0,0),
         new Ponto(500, 0,0),
         new Ponto(500, 450,0),
-        new Ponto(0, 450,0)
+        new Ponto(0, 450,0),
     };
     QList<Aresta*> arestas0 = {
         new Aresta(pontos0[0], pontos0[1]),
@@ -64,13 +64,44 @@ void DisplayFile::gerarObjetos() {
         new Ponto(200, 200,0),
         new Ponto(100, 200,0),
         new Ponto(100, 200,0),
-        new Ponto(100, 100,0)
+        new Ponto(100, 100,0),
+
+        new Ponto(100, 100,100),
+        new Ponto(200, 100,100),
+        new Ponto(200, 100,100),
+        new Ponto(200, 200,100),
+        new Ponto(200, 200,100),
+        new Ponto(100, 200,100),
+        new Ponto(100, 200,100),
+        new Ponto(100, 100,100),
+
+        new Ponto(100, 100,0),
+        new Ponto(200, 100,0),
+        new Ponto(200, 200,0),
+        new Ponto(100, 200,0),
+
+        new Ponto(100, 100,100),
+        new Ponto(200, 100,100),
+        new Ponto(200, 200,100),
+        new Ponto(100, 200,100)
+
     };
     QList<Aresta*> arestas3 = {
         new Aresta(pontos3[0], pontos3[1]),
         new Aresta(pontos3[2], pontos3[3]),
         new Aresta(pontos3[4], pontos3[5]),
-        new Aresta(pontos3[6], pontos3[7])
+        new Aresta(pontos3[6], pontos3[7]),
+
+        new Aresta(pontos3[8], pontos3[9]),
+        new Aresta(pontos3[10], pontos3[11]),
+        new Aresta(pontos3[12], pontos3[13]),
+        new Aresta(pontos3[14], pontos3[15]),
+
+        new Aresta(pontos3[16], pontos3[20]),
+        new Aresta(pontos3[17], pontos3[21]),
+        new Aresta(pontos3[18], pontos3[22]),
+        new Aresta(pontos3[19], pontos3[23])
+
     };
 
     Objeto* obj3 = new Objeto{"Quadrado", pontos3, arestas3};

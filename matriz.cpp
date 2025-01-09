@@ -79,6 +79,7 @@ Matriz Matriz::rotacaoX(Ponto p, float angulo) { // ALTERAR ALTERAR ALTERAR ALTE
 
     Matriz matrizRot = Matriz::gerarIdentidade(4,4);
     double rad = (angulo * PI) / 180;
+    cout << "\nangulo de rotacao "<< rad << "\n";
     matrizRot(1,1) = cos(rad);
     matrizRot(1,2) = -sin(rad);
     matrizRot(2,1) = sin(rad);
@@ -93,6 +94,7 @@ Matriz Matriz::rotacaoY(Ponto p, float angulo) { // ALTERAR ALTERAR ALTERAR ALTE
 
     Matriz matrizRot = Matriz::gerarIdentidade(4,4);
     double rad = (angulo * PI) / 180;
+    cout << "\nangulo de rotacao "<< rad << "\n";
     matrizRot(0,0) = cos(rad);
     matrizRot(2,0) = -sin(rad);
     matrizRot(0,2) = sin(rad);
@@ -106,6 +108,7 @@ Matriz Matriz::rotacaoZ(Ponto p, float angulo) { // ALTERAR ALTERAR ALTERAR ALTE
 
     Matriz matrizRot = Matriz::gerarIdentidade(4,4);
     double rad = (angulo * PI) / 180;
+    cout << "\nangulo de rotacao "<< rad << "\n";
     matrizRot(0,0) = cos(rad);
     matrizRot(0,1) = -sin(rad);
     matrizRot(1,0) = sin(rad);
@@ -135,3 +138,4 @@ void Matriz::imprimir() const {
         cout << endl;
     }
 }
+

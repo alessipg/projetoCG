@@ -13,6 +13,7 @@ FramePrincipal::FramePrincipal(QWidget *parent)
     this->window = dynamic_cast<Window*>(df.displayFile[0]);
     //chamada necessária após toda transformação
     rotinaWindow();
+
 }
 /*********************************************************************************************
  *              PIPELINE DE VISUALIZAÇÃO
@@ -95,7 +96,7 @@ void FramePrincipal::transformarObjeto(const QString &inputText) {
     std::reverse(lines.begin(), lines.end()); // Inverte a ordem das linhas
 
     Matriz composta(4, 4);
-    composta = Matriz::gerarIdentidade(3,3);
+    composta = Matriz::gerarIdentidade(4,4);
     // se a checkbox está marcada, alteramos o obj a ser transformado para window
     if(isWindow){
         objAtual=window;
@@ -171,9 +172,17 @@ void FramePrincipal::rotinaWindow(){
         obj->ajustarSNC();
     }
     //angulo (viewUp,Y)
+
     double anguloX = std::get<0>(anguloVPN());
     double anguloY = std::get<1>(anguloVPN());
     double anguloZ = std::get<2>(anguloVPN());
+
+    double auxiliarX = anguloX - 90;
+    double auxiliarY = anguloY - 90;
+
+        anguloX = -auxiliarX;
+        anguloY = -auxiliarY;
+        anguloZ = -anguloZ;
 
     // Normalização
     Matriz composta(4,4);
