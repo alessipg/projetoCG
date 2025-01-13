@@ -13,12 +13,15 @@ class Objeto
 {
 public:
     Objeto(QString nome, QList<Ponto*> pontos, QList<Aresta*> arestas);
+    Objeto();
     QString nome;
     QList<Ponto*> pontos;
     QList<Aresta*> arestas;
     void transformarPontos(Matriz composta);
     void transformarPontosWin(Matriz composta);
-    void ajustarSNC();
+    void alinharPontosWin(Matriz composta);
+    void ajustarSCN();
+    Ponto *medio;
     void clipping(float xmin, float xmax, float ymin, float ymax);
     virtual ~Objeto();
 };

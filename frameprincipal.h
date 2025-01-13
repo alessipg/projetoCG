@@ -17,9 +17,9 @@
 #include <matriz.h>
 #include <window.h>
 #define XMIN 20
-#define XMAX 480
+#define XMAX 570
 #define YMIN 20
-#define YMAX 430
+#define YMAX 511
 
 #define LARGURA_VP (XMAX - XMIN)
 #define ALTURA_VP (YMAX - YMIN)
@@ -37,8 +37,7 @@ public:
     void corrigirRotacaoWindow(Window *inputWindow);
     void calcularCoordenadasViewPort(Window *inputWindow);
     void escalonarPontos();
-    void rotinaWindow();
-    double anguloViewUp();
+    void pipeline();
     Window *window;
     //objeto que foi escolhido para ser desenhado
     QString objetoAlvo;
@@ -47,10 +46,11 @@ public:
     Objeto *objAtual;
     bool isWindow;
     Objeto* getObjetoByName(const QString& nome);
+    std::tuple<double, double, double> calcularAngulos(Ponto p, Ponto vUp);
 public slots:
     //void transformarWindow(const QString &inputText);
     void desenharObjeto(const QString &buttonText);
-    void transformarObjeto(const QString &inputText);
+    void transformarObjeto(char op,double v1,double v2,double v3,char eixo);
 };
 
 #endif // FRAMEPRINCIPAL_H

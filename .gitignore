@@ -7,7 +7,6 @@
 *.core
 *.moc
 *.o
-*.obj
 *.orig
 *.rej
 *.so
@@ -71,4 +70,3 @@ CMakeLists.txt.user*
 # --------
 *.dll
 *.exe
-
