@@ -11,6 +11,7 @@ public:
     QList<Objeto*> displayFile;
     void gerarObjetos();
     void transformada(Matriz composta);
+    void alinhamento(Matriz composta);
     void aplicarClipping();
     void carregarArquivo();
     void imprimirObjetos() const;

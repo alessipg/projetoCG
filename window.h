@@ -7,8 +7,10 @@ class Window : public Objeto
 public:
     Window(QString nome, QList<Ponto*> pontos, QList<Aresta*> arestas);
     ~Window();
-    Ponto *VRP; // Antigo "centro", atualizado para um nome mais "correto"
-    Ponto *VPN; // Substitui o antigo viewUp por torná-lo obsoleto
+    Ponto *VRP;
+    Ponto *viewUp;
+    Ponto *VPN;
+    Ponto *COP;
     float altura;
     float largura;
     float getLargura();
