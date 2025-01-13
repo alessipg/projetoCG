@@ -21,9 +21,14 @@ public:
     Matriz operator*(const Matriz& matriz) const;
 
     static Matriz gerarIdentidade(int linhas, int colunas);
-    static Matriz translacao(float dx, float dy);
-    static Matriz rotacao(Ponto ponto, float angulo);
-    static Matriz escalonamento(float sx, float sy);
+    static Matriz translacao(float dx, float dy, float dz);
+    static Matriz translacao2D(float dx, float dy);
+    static Matriz rotacaoX(float angulo);
+    static Matriz rotacaoY(float angulo);
+    static Matriz rotacaoZ(float angulo);
+    static Matriz rotacao2D(float angulo);
+    static Matriz escalonamento(float sx, float sy, float sz);
+    static Matriz escalonamento2D(float sx, float sy);
     static Matriz gerarViewport();
 
     void imprimir() const;

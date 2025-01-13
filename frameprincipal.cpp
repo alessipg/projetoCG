@@ -12,7 +12,7 @@ FramePrincipal::FramePrincipal(QWidget *parent)
     //ponteiro para window no displayfile, mais facil de realizar as manipulações
     this->window = dynamic_cast<Window*>(df.displayFile[0]);
     //chamada necessária após toda transformação
-    rotinaWindow();
+    pipeline();
 }
 /*********************************************************************************************
  *              PIPELINE DE VISUALIZAÇÃO
@@ -51,7 +51,7 @@ void FramePrincipal::paintEvent(QPaintEvent *event) {
  */
     //painter.translate(0, height()); // Move o ponto de origem para o canto inferior esquerdo
     //painter.scale(1, -1);           // Inverte o eixo Y
-    painter.setPen(QPen(Qt::red, 2));
+    painter.setPen(QPen(Qt::red,1));
 
     //desenhando window para ver se as alterações estão corretas
     for(Aresta* aresta: window->arestas){
@@ -78,140 +78,145 @@ void FramePrincipal::desenharObjeto(const QString &buttonText) {
     qDebug().noquote() << "Desenhando objeto:" << buttonText;
     // armazena o nome do obj que será desenhado
     objetoAlvo = buttonText;
-    rotinaWindow();
+    pipeline();
 
 }
 
-void FramePrincipal::transformarObjeto(const QString &inputText) {
-    if(!objAtual){
-        qDebug() <<"sem objeto instanciado na cena";
+void FramePrincipal::transformarObjeto(char op,double v1, double v2, double v3, char eixo) {
+    // Se a checkbox está marcada, alteramos o objeto a ser transformado para a janela
+    if (isWindow) {
+        objAtual = window;
+    }
+    if (!objAtual) {
+        qDebug() << "Sem objeto instanciado na cena";
         return;
     }
 
-    //qDebug().noquote() << "Input:" << inputText;
+    Matriz composta(4, 4);
+    composta = Matriz::gerarIdentidade(4, 4);
 
-    static QRegularExpression pattern(R"((\w)\s(-?\d+(\.\d+)?),(-?\d+(\.\d+)?)(?:\s(-?\d+(\.\d+)?))?)");
-    QStringList lines = inputText.split('\n');
-    std::reverse(lines.begin(), lines.end()); // Inverte a ordem das linhas
-
-    Matriz composta(3, 3);
-    composta = Matriz::gerarIdentidade(3,3);
-    // se a checkbox está marcada, alteramos o obj a ser transformado para window
-    if(isWindow){
-        objAtual=window;
-        //qDebug()<<objAtual->nome;
-    }
-    //dx e dy devem ser as coordenadas do ponto (?)
-    composta = composta * Matriz::translacao(-this->objAtual->pontos[0]->x, -this->objAtual->pontos[0]->y);
-    //composta.imprimir();
+    // Move o objeto para a origem para realizar transformações
+    composta = Matriz::translacao(
+                   -this->objAtual->medio->x,
+                   -this->objAtual->medio->y,
+                   -this->objAtual->medio->z
+                   ) * composta;
 
     float translacaoX = 0;
     float translacaoY = 0;
+    float translacaoZ = 0;
 
-    for (const QString &line : lines) {
-        QRegularExpressionMatch match = pattern.match(line);
+    if (op == 'T') {  // Translação
+        translacaoX += v1;
+        translacaoY += v2;
+        translacaoZ += v3;
 
-        if (match.hasMatch()) {
-            QString op = match.captured(1);      // Operação (ex: "R", "T", "E")
-            float v1 = match.captured(2).toFloat(); // Primeiro valor (ex: "1.5")
-            float v2 = match.captured(4).toFloat(); // Segundo valor (ex: "2.3")
-            float angulo = match.captured(6).isEmpty() ? 0 : match.captured(6).toFloat(); // Ângulo (opcional)
-            //qDebug().noquote() << op << v1 << v2 << angulo;
+    } else if (op == 'E') {  // Escala
+        composta = Matriz::escalonamento(v1, v2, v3) * composta;
 
-            if (op == "R") {
-                composta = Matriz::rotacao(Ponto(v1, v2), angulo) * composta;
-                //std::cout << "rotacao"<<endl;
-                //composta.imprimir();
-            } else if (op == "T") {
-                /*composta = Matriz::translacao(v1, v2) * composta;*/
-                translacaoX += v1;
-                translacaoY += v2;
-                //std::cout << "translacao"<<endl;
-                //composta.imprimir();
-            } else if (op == "E") {
-                composta =Matriz::escalonamento(v1, v2)* composta;
-                //std::cout << "escala"<<endl;
-                //composta.imprimir();
-            } else {
-                qDebug() << "Operação desconhecida:" << op;
-            }
-        } else {
-            qDebug() << "A string de entrada não corresponde ao formato esperado.";
+    } else if (op == 'R') {  // Rotação
+        if (eixo == 'X') {
+            composta = Matriz::rotacaoX(v1) * composta;
+        } else if (eixo == 'Y') {
+            composta = Matriz::rotacaoY(v1) * composta;
+        } else if (eixo == 'Z') {
+            composta = Matriz::rotacaoZ(v1) * composta;
         }
     }
-    //retorna ponto original+translacoes solicitadas
-    composta = Matriz::translacao(this->objAtual->pontos[0]->x+translacaoX,
-                                  this->objAtual->pontos[0]->y+translacaoY) * composta;
-    // aplica alterações em coordenadas de mundo
-    this->objAtual->transformarPontos(composta);
-    // chama a transformada de VP
-    rotinaWindow();
 
-    //update(); // Atualiza o widget
+    // Retorna o ponto original + translações solicitadas
+    composta = Matriz::translacao(
+                   this->objAtual->medio->x + translacaoX,
+                   this->objAtual->medio->y + translacaoY,
+                   this->objAtual->medio->z + translacaoZ
+                   ) * composta;
+
+    // Aplica as alterações às coordenadas do objeto
+    this->objAtual->transformarPontos(composta);
+
+    // Chama a transformada de viewport
+    pipeline();    
 }
 
-void FramePrincipal::rotinaWindow(){
-
-    /*  Método de geração de composta com base na matriz da apostila da USP
-     */
-
+void FramePrincipal::pipeline(){
 
     for(Objeto* obj : this->df.displayFile){
-        obj->ajustarSNC();
+        obj->ajustarSCN();
     }
-    //angulo (viewUp,Y)
-    double angulo = anguloViewUp();
+    // Calcular ângulos X, Y e Z
+    auto [anguloEixoX, anguloEixoY, anguloEixoZ] = calcularAngulos(*window->VPN,*window->viewUp);
 
-    // Normalização
-    Matriz composta(3,3);
-    composta = Matriz::gerarIdentidade(3,3);
-    composta = Matriz::translacao(-window->centro->x,-window->centro->y) * composta;
-    composta = Matriz::rotacao(*window->centro,angulo) * composta;
+    Matriz composta(4,4);
+    composta = Matriz::gerarIdentidade(4,4);
+    composta = Matriz::translacao(-window->VRP->x,-window->VRP->y,-window->VRP->z) * composta;
+    composta = Matriz::rotacaoY(-anguloEixoY) * composta;
+    composta = Matriz::rotacaoX(anguloEixoX) * composta;
+    composta = Matriz::rotacaoZ(anguloEixoZ) * composta;
+    //std::cout << "Angulos calculados: X = " << anguloEixoX<< ", Y = " << anguloEixoY<< ", Z = " << anguloEixoZ << std::endl;
+    //composta.imprimir();
+    //composta.imprimir();
     //precisa alinhar a window com os eixos para o clipping
-
-    //aplicar SCN
-    composta = Matriz::escalonamento(2/window->getLargura(),2/window->getAltura())  * composta;
-
-    df.transformada(composta);
-
+    //composta = Matriz::escalonamento(2/window->getLargura(),2/window->getAltura(),1)  * Matriz::gerarIdentidade(4,4);
+    df.alinhamento(composta);
+    //std::cout<<"Depois ";
+    //std::cout<<"VPN "<<window->VPN->xWin<<", "<<window->VPN->yWin<<", "<<window->VPN->zWin;
+    //std::cout<<"ViewUp "<<window->viewUp->xWin<<", "<<window->viewUp->yWin<<", "<<window->viewUp->zWin<<endl;
+    //std::cout<<window->VPN->xWin<<" "<<window->VPN->yWin<<" "<<window->VPN->zWin<<endl;
+    //std::cout<<"Min "<<window->pontos[0]->xWin<<" "<<window->pontos[0]->yWin<<" "<<window->pontos[0]->zWin<<" ";
+    //std::cout<<"Max "<<window->pontos[2]->xWin<<" "<<window->pontos[2]->yWin<<" "<<window->pontos[2]->zWin<<" "<<endl;
+    //a partir daqui ignora-se o eixo Z
     df.aplicarClipping();
     // transformada de VP
     Matriz composta2(3,3);
     composta2 = Matriz::gerarIdentidade(3,3);
-    composta2 = Matriz::translacao(1,1) * composta2;
-    composta2 = Matriz::escalonamento(0.5,0.5)* composta2;
-    composta2 = Matriz::escalonamento(1,-1) * composta2;
-    composta2 = Matriz::translacao(0,1) * composta2;
-    composta2 = Matriz::escalonamento(LARGURA_VP,ALTURA_VP) * composta2;
+    composta2 = Matriz::escalonamento2D(2/window->getLargura(),2/window->getAltura())  * composta2;
+    composta2 = Matriz::translacao2D(1,1) * composta2;
+    composta2 = Matriz::escalonamento2D(0.5,0.5)* composta2;
+    composta2 = Matriz::escalonamento2D(1,-1) * composta2;
+    composta2 = Matriz::translacao2D(0,1) * composta2;
+    composta2 = Matriz::escalonamento2D(LARGURA_VP,ALTURA_VP) * composta2;
 
     //translacao para o centro da vp [visualizar o clipping]
-    composta2 = Matriz::translacao(20,20) *composta2;
+    composta2 = Matriz::translacao2D(20,20) *composta2;
 
     df.transformada(composta2);
 
     update();
 }
 
-double FramePrincipal::anguloViewUp() {
-    // Coleta as coordenadas do centro da janela
-    double centroX = window->centro->x;
-    double centroY = window->centro->y;
+std::tuple<double, double, double> FramePrincipal::calcularAngulos(Ponto ponto, Ponto viewUp){
 
-    // Coleta as coordenadas de viewUp
-    double viewUpX = window->viewUp->x;
-    double viewUpY = window->viewUp->y;
-
-    // Calcula o vetor de deslocamento (viewUp - centro)
-    double dx = viewUpX - centroX;
-    double dy = viewUpY - centroY;
-
-    // Usa atan2 para calcular o ângulo em relação ao eixo Y
-    double angulo = atan2(dx, dy) * 180.0 / M_PI;
+    Ponto *vpn = new Ponto(ponto.xWin-window->VRP->xWin, ponto.yWin-window->VRP->yWin, ponto.zWin-window->VRP->zWin);
+    Ponto *vUp = new Ponto(viewUp.xWin-window->VRP->xWin, viewUp.yWin-window->VRP->yWin, viewUp.zWin-window->VRP->zWin);
+    Objeto obj;
+    obj.pontos.append(vpn);
+    obj.pontos.append(vUp);
+    obj.ajustarSCN();
+    double anguloXZ = atan2(vpn->xWin, vpn->zWin) * 180.0 / M_PI;
+    if (anguloXZ < 0) {
+        anguloXZ += 360.0;
+    }
+    Matriz composta = Matriz::rotacaoY(-anguloXZ) * Matriz::gerarIdentidade(4,4);
+    obj.alinharPontosWin(composta);
+    double anguloYZ = atan2(vpn->yWin, vpn->zWin) * 180.0 / M_PI;
 
     // Ajusta o ângulo para o intervalo [0, 360]
-    if (angulo < 0) {
-        angulo += 360.0;
+    if (anguloYZ < 0) {
+        anguloYZ += 360.0;
     }
+    composta = Matriz::rotacaoX(anguloYZ) * Matriz::gerarIdentidade(4,4);
+    obj.alinharPontosWin(composta);
+    double anguloXY = atan2(vUp->xWin, vUp->yWin) * 180.0 / M_PI;
 
-    return angulo;
+    // Ajusta o ângulo para o intervalo [0, 360]
+    if (anguloXY < 0) {
+        anguloXY += 360.0;
+    }
+    composta = Matriz::rotacaoZ(anguloXY) * Matriz::gerarIdentidade(4,4);
+    obj.alinharPontosWin(composta);
+    return {anguloYZ,anguloXZ,anguloXY};
 }
+
+
+
+

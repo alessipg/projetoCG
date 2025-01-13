@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#define DESLOCAMENTO 10
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -24,10 +25,58 @@ MainWindow::MainWindow(QWidget *parent)
         QString buttonText = ui->btnLinha->text();
         ui->frame->desenharObjeto(buttonText);
     });
-    connect(ui->btnTransformar, &QPushButton::clicked, this, [=](){
-        QString inputText = ui->cmdTrans->toPlainText();
-        ui->frame->transformarObjeto(inputText);
+
+    //TRANSLACOES
+    connect(ui->xMais, &QPushButton::clicked, this, [=](){
+        ui->frame->transformarObjeto('T',ui->valorT->value(),0,0,0);
     });
+    connect(ui->xMenos, &QPushButton::clicked, this, [=](){
+        ui->frame->transformarObjeto('T',-ui->valorT->value(),0,0,0);
+    });
+    connect(ui->yMais, &QPushButton::clicked, this, [=](){
+        ui->frame->transformarObjeto('T',0,ui->valorT->value(),0,0);
+    });
+    connect(ui->yMenos, &QPushButton::clicked, this, [=](){
+        ui->frame->transformarObjeto('T',0,-ui->valorT->value(),0,0);
+    });
+    connect(ui->zMais, &QPushButton::clicked, this, [=](){
+        ui->frame->transformarObjeto('T',0,0,ui->valorT->value(),0);
+    });
+    connect(ui->zMenos, &QPushButton::clicked, this, [=](){
+        ui->frame->transformarObjeto('T',0,0,-ui->valorT->value(),0);
+    });
+
+    //ESCALA
+    connect(ui->xEscMais, &QPushButton::clicked, this, [=](){
+        ui->frame->transformarObjeto('E',ui->valorE->value(),1,1,0);
+    });
+    connect(ui->yEscMais, &QPushButton::clicked, this, [=](){
+        ui->frame->transformarObjeto('E',1,ui->valorE->value(),1,0);
+    });
+    connect(ui->zEscMais, &QPushButton::clicked, this, [=](){
+        ui->frame->transformarObjeto('E',1,1,ui->valorE->value(),0);
+    });
+    connect(ui->allEscala, &QPushButton::clicked, this, [=](){
+        ui->frame->transformarObjeto('E',ui->valorE->value(),ui->valorE->value(),ui->valorE->value(),0);
+    });
+
+
+    //ROTACAO
+    connect(ui->rotMais, &QPushButton::clicked, this, [=](){
+        char eixo = checkEixo();
+        if(eixo == -1)
+            ui->statusbar->showMessage("Selecione um eixo para rotacionar",5);
+        else
+            ui->frame->transformarObjeto('R',ui->valorR->value(),0,0,eixo);
+    });
+    connect(ui->rotMenos, &QPushButton::clicked, this, [=](){
+        char eixo = checkEixo();
+        if(eixo == -1)
+            ui->statusbar->showMessage("Selecione um eixo para rotacionar",5);
+        else
+            ui->frame->transformarObjeto('R',-ui->valorR->value(),0,0,eixo);
+    });
+
     connect(ui->cbWindow, &QCheckBox::stateChanged, this, [=](int state) {
         //lógica para definir modificação na window ou no cenário
         if (state == Qt::Checked) {
@@ -41,7 +90,15 @@ MainWindow::MainWindow(QWidget *parent)
     });
 
 }
-
+char MainWindow::checkEixo(){
+    if(ui->rotX->isChecked())
+        return 'X';
+    else if(ui->rotY->isChecked())
+        return 'Y';
+    else if(ui->rotZ->isChecked())
+        return 'Z';
+    else return -1;
+}
 
 MainWindow::~MainWindow() {
     delete ui;
