@@ -1,6 +1,6 @@
 #include "frameprincipal.h"
 #include <iostream>
-#include <math.h>
+#include <cmath>
 #include <mainwindow.h>
 
 FramePrincipal::FramePrincipal(QWidget *parent)
@@ -91,7 +91,6 @@ void FramePrincipal::transformarObjeto(char op,double v1, double v2, double v3, 
         qDebug() << "Sem objeto instanciado na cena";
         return;
     }
-
     Matriz composta(4, 4);
     composta = Matriz::gerarIdentidade(4, 4);
 
@@ -124,6 +123,7 @@ void FramePrincipal::transformarObjeto(char op,double v1, double v2, double v3, 
         }
     }
 
+
     // Retorna o ponto original + translações solicitadas
     composta = Matriz::translacao(
                    this->objAtual->medio->x + translacaoX,
@@ -152,18 +152,10 @@ void FramePrincipal::pipeline(){
     composta = Matriz::rotacaoY(-anguloEixoY) * composta;
     composta = Matriz::rotacaoX(anguloEixoX) * composta;
     composta = Matriz::rotacaoZ(anguloEixoZ) * composta;
-    //std::cout << "Angulos calculados: X = " << anguloEixoX<< ", Y = " << anguloEixoY<< ", Z = " << anguloEixoZ << std::endl;
-    //composta.imprimir();
     //composta.imprimir();
     //precisa alinhar a window com os eixos para o clipping
     //composta = Matriz::escalonamento(2/window->getLargura(),2/window->getAltura(),1)  * Matriz::gerarIdentidade(4,4);
     df.alinhamento(composta);
-    //std::cout<<"Depois ";
-    //std::cout<<"VPN "<<window->VPN->xWin<<", "<<window->VPN->yWin<<", "<<window->VPN->zWin;
-    //std::cout<<"ViewUp "<<window->viewUp->xWin<<", "<<window->viewUp->yWin<<", "<<window->viewUp->zWin<<endl;
-    //std::cout<<window->VPN->xWin<<" "<<window->VPN->yWin<<" "<<window->VPN->zWin<<endl;
-    //std::cout<<"Min "<<window->pontos[0]->xWin<<" "<<window->pontos[0]->yWin<<" "<<window->pontos[0]->zWin<<" ";
-    //std::cout<<"Max "<<window->pontos[2]->xWin<<" "<<window->pontos[2]->yWin<<" "<<window->pontos[2]->zWin<<" "<<endl;
     //a partir daqui ignora-se o eixo Z
     df.aplicarClipping();
     // transformada de VP
@@ -178,6 +170,7 @@ void FramePrincipal::pipeline(){
 
     //translacao para o centro da vp [visualizar o clipping]
     composta2 = Matriz::translacao2D(20,20) *composta2;
+
 
     df.transformada(composta2);
 

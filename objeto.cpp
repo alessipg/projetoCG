@@ -3,13 +3,14 @@
 
 Objeto::Objeto(QString nome, QList<Ponto*> pontos, QList<Aresta*> arestas) :
     nome(nome), pontos(pontos), arestas(arestas) {
-    // Inicialize com os valores do primeiro ponto
+
     double menorX = pontos[0]->x;
     double maiorX = pontos[0]->x;
     double menorY = pontos[0]->y;
     double maiorY = pontos[0]->y;
     double menorZ = pontos[0]->z;
     double maiorZ = pontos[0]->z;
+
 
     // Encontre os valores mínimos e máximos
     for (Ponto *p : pontos) {
@@ -50,6 +51,7 @@ void Objeto::transformarPontos(Matriz composta){
         matrizPonto(1,0) = this->pontos[i]->y;
         matrizPonto(2,0) = this->pontos[i]->z;
         matrizPonto(3,0) = this->pontos[i]->coordW;
+
         //std::cout << "matriz ponto antes" << endl;
         //matrizPonto.imprimir();
         matrizPonto = composta * matrizPonto;
@@ -68,17 +70,19 @@ void Objeto::transformarPontosWin(Matriz composta){ //exatamente igual à acima,
     //std::cout << "composta"<<endl;
     //composta.imprimir();
     for (int i = 0; i < this->pontos.length(); ++i) {
-        Matriz matrizPonto(3,1);
+        Matriz matrizPonto(4,1);
         matrizPonto(0,0) = this->pontos[i]->xWin;
         matrizPonto(1,0) = this->pontos[i]->yWin;
-        matrizPonto(2,0) = this->pontos[i]->coordWWin;
+        matrizPonto(2,0) = this->pontos[i]->zWin;
+        matrizPonto(3,0) = this->pontos[i]->coordWWin;
         //std::cout << "matriz ponto antes" << endl;
         //matrizPonto.imprimir();
         matrizPonto = composta * matrizPonto;
 
         this->pontos[i]->xWin = matrizPonto(0,0);
         this->pontos[i]->yWin = matrizPonto(1,0);
-        this->pontos[i]->coordWWin = matrizPonto(2,0);
+        this->pontos[i]->zWin = matrizPonto(2,0);
+        this->pontos[i]->coordWWin = matrizPonto(3,0);
         //std::cout << "matriz ponto depois" << endl;
         //matrizPonto.imprimir();
     }
@@ -136,6 +140,25 @@ void Objeto::clipping(float xmin,float xmax, float ymin, float ymax){
         }
     }
 
+}
+
+Ponto* Objeto::calcularCentro(){
+    if (this->pontos.isEmpty()) return NULL;
+    else {
+        double centroX = 0;
+        double centroY = 0;
+        double centroZ = 0;
+
+         for (int i = 0; i < this->pontos.length(); ++i) {
+            centroX += this->pontos[i]->x;
+            centroY += this->pontos[i]->y;
+            centroZ += this->pontos[i]->z;
+         }
+         centroX /= this->pontos.length();
+         centroY /= this->pontos.length();
+         centroZ /= this->pontos.length();
+        return new Ponto (centroX,centroY,centroZ);
+    }
 }
 
 Objeto::~Objeto() {

@@ -59,6 +59,7 @@ Matriz Matriz::gerarIdentidade(int linhas, int colunas) {
             }
         }
     }
+    identidade.imprimir();
 
     return identidade;
 }
@@ -77,8 +78,9 @@ Matriz Matriz::translacao2D(float dx, float dy) {
     Matriz matrizTransl(3,3);
     matrizTransl = Matriz::gerarIdentidade(3,3);
 
-    matrizTransl(0,2) = dx;
-    matrizTransl(1,2) = dy;
+    matrizTransl(0,3) = dx;
+    matrizTransl(1,3) = dy;
+    matrizTransl(2,3) = dz;
 
     return matrizTransl;
 }
@@ -120,10 +122,27 @@ Matriz Matriz::rotacao2D(float angulo) {
     Matriz matrizRot(3,3);
     matrizRot = Matriz::gerarIdentidade(3,3);
     double rad = (angulo * PI) / 180;
+    cout << "\nangulo de rotacao "<< rad << "\n";
+    matrizRot(0,0) = cos(rad);
+    matrizRot(2,0) = -sin(rad);
+    matrizRot(0,2) = sin(rad);
+    matrizRot(2,2) = cos(rad);
+    cout << "\nRotacao Y\n";
+    matrizRot.imprimir();
+    return matrizRot;
+}
+
+Matriz Matriz::rotacaoZ(Ponto p, float angulo) { // ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR ALTERAR
+
+    Matriz matrizRot = Matriz::gerarIdentidade(4,4);
+    double rad = (angulo * PI) / 180;
+    cout << "\nangulo de rotacao "<< rad << "\n";
     matrizRot(0,0) = cos(rad);
     matrizRot(0,1) = -sin(rad);
     matrizRot(1,0) = sin(rad);
     matrizRot(1,1) = cos(rad);
+    cout << "\nRotacao Z\n";
+    matrizRot.imprimir();
     return matrizRot;
 }
 
@@ -140,11 +159,12 @@ Matriz Matriz::escalonamento(float sx, float sy, float sz) {
 
 Matriz Matriz::escalonamento2D(float sx, float sy) {
 
-    Matriz matrizEsc(3,3);
-    matrizEsc = Matriz::gerarIdentidade(3,3);
+    Matriz matrizEsc(4,4);
+    matrizEsc = Matriz::gerarIdentidade(4,4);
 
     matrizEsc(0,0) = sx;
     matrizEsc(1,1) = sy;
+    matrizEsc(2,2) = sz;
     return matrizEsc;
 }
 
@@ -157,3 +177,4 @@ void Matriz::imprimir() const {
         cout << endl;
     }
 }
+

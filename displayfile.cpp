@@ -31,8 +31,8 @@ void DisplayFile::gerarObjetos() {
     /*
     // Linha
     QList<Ponto*> pontos1 = {
-        new Ponto(100, 200),
-        new Ponto(200, 200)
+        new Ponto(100, 200,0),
+        new Ponto(200, 200,0)
     };
     QList<Aresta*> arestas1 = {
         new Aresta(pontos1[0], pontos1[1])
@@ -42,12 +42,12 @@ void DisplayFile::gerarObjetos() {
 
     // Triângulo
     QList<Ponto*> pontos2 = {
-        new Ponto(50, 50),
-        new Ponto(300, 50),
-        new Ponto(300, 50),
-        new Ponto(200, 200),
-        new Ponto(200, 200),
-        new Ponto(50, 50)
+        new Ponto(50, 50,0),
+        new Ponto(300, 50,0),
+        new Ponto(300, 50,0),
+        new Ponto(200, 200,0),
+        new Ponto(200, 200,0),
+        new Ponto(50, 50,0)
     };
     QList<Aresta*> arestas2 = {
         new Aresta(pontos2[0], pontos2[1]),
@@ -88,6 +88,7 @@ void DisplayFile::gerarObjetos() {
         new Ponto(200, 200, -100), // Ponto 21
         new Ponto(100, 200, 0),    // Ponto 22
         new Ponto(100, 200, -100)  // Ponto 23
+
     };
 
     QList<Aresta*> arestas3 = {
@@ -96,6 +97,7 @@ void DisplayFile::gerarObjetos() {
         new Aresta(pontos3[2], pontos3[3]),
         new Aresta(pontos3[4], pontos3[5]),
         new Aresta(pontos3[6], pontos3[7]),
+
 
         // Arestas de trás
         new Aresta(pontos3[8], pontos3[9]),

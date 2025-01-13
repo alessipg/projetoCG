@@ -49,4 +49,5 @@ Window::~Window() {
     this->pontos.removeOne(viewUp); // Remove viewUp de pontos
     delete VRP;  // Libera o centro
     delete viewUp;  // Libera o viewUp
+
 }
