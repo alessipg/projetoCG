@@ -9,7 +9,7 @@ DisplayFile::DisplayFile() {
 }
 
 void DisplayFile::gerarObjetos() {
-/*  Para fazer o dynamic cast, deve se utilizar ponteiros, então todo o programa foi alterado.
+    /*  Para fazer o dynamic cast, deve se utilizar ponteiros, então todo o programa foi alterado.
  *  Agora todo obj de classe que herda de Objeto pode ser alocado no df, desde que tenha
  *  destrutor adequado.
  */
@@ -31,8 +31,8 @@ void DisplayFile::gerarObjetos() {
     /*
     // Linha
     QList<Ponto*> pontos1 = {
-        new Ponto(100, 200,0),
-        new Ponto(200, 200,0)
+        new Ponto(100, 200),
+        new Ponto(200, 200)
     };
     QList<Aresta*> arestas1 = {
         new Aresta(pontos1[0], pontos1[1])
@@ -42,12 +42,12 @@ void DisplayFile::gerarObjetos() {
 
     // Triângulo
     QList<Ponto*> pontos2 = {
-        new Ponto(50, 50,0),
-        new Ponto(300, 50,0),
-        new Ponto(300, 50,0),
-        new Ponto(200, 200,0),
-        new Ponto(200, 200,0),
-        new Ponto(50, 50,0)
+        new Ponto(50, 50),
+        new Ponto(300, 50),
+        new Ponto(300, 50),
+        new Ponto(200, 200),
+        new Ponto(200, 200),
+        new Ponto(50, 50)
     };
     QList<Aresta*> arestas2 = {
         new Aresta(pontos2[0], pontos2[1]),
@@ -88,7 +88,6 @@ void DisplayFile::gerarObjetos() {
         new Ponto(200, 200, -100), // Ponto 21
         new Ponto(100, 200, 0),    // Ponto 22
         new Ponto(100, 200, -100)  // Ponto 23
-
     };
 
     QList<Aresta*> arestas3 = {
@@ -97,7 +96,6 @@ void DisplayFile::gerarObjetos() {
         new Aresta(pontos3[2], pontos3[3]),
         new Aresta(pontos3[4], pontos3[5]),
         new Aresta(pontos3[6], pontos3[7]),
-
 
         // Arestas de trás
         new Aresta(pontos3[8], pontos3[9]),
@@ -124,12 +122,12 @@ void DisplayFile::aplicarClipping(){
     // Aqui está aplicando em todos os objetos do displayfile, talvez
     // tenha que mudar isso lá na frente
     for(int i = 1;i<this->displayFile.length();i++){
-            for (Aresta* aresta : this->displayFile[i]->arestas) {
-                aresta->clipping(this->displayFile[0]->pontos[0]->xWin,
-                                 this->displayFile[0]->pontos[2]->xWin,
-                                 this->displayFile[0]->pontos[0]->yWin,
-                                 this->displayFile[0]->pontos[2]->yWin);
-            }
+        for (Aresta* aresta : this->displayFile[i]->arestas) {
+            aresta->clipping(this->displayFile[0]->pontos[0]->xWin,
+                             this->displayFile[0]->pontos[2]->xWin,
+                             this->displayFile[0]->pontos[0]->yWin,
+                             this->displayFile[0]->pontos[2]->yWin);
+        }
 
     }
 }
@@ -212,8 +210,8 @@ void DisplayFile::carregarArquivo() {
                 // Criar uma aresta conectando ao ponto anterior
                 if (i > 1) {
                     Ponto* pontoAnterior = new Ponto(faceVertices[i - 2]->x,
-                                                    faceVertices[i - 2]->y,
-                                                    faceVertices[i - 2]->z);
+                                                     faceVertices[i - 2]->y,
+                                                     faceVertices[i - 2]->z);
                     Ponto* pontoAtual = new Ponto(faceVertices[i - 1]->x,
                                                   faceVertices[i - 1]->y,
                                                   faceVertices[i - 1]->z);
@@ -226,8 +224,8 @@ void DisplayFile::carregarArquivo() {
             // Fechar a face se for um polígono (opcional)
             if (faceVertices.size() > 2) {
                 Ponto* primeiroPonto = new Ponto(faceVertices.first()->x,
-                                                faceVertices.first()->y,
-                                                faceVertices.first()->z);
+                                                 faceVertices.first()->y,
+                                                 faceVertices.first()->z);
                 Ponto* ultimoPonto = new Ponto(faceVertices.last()->x,
                                                faceVertices.last()->y,
                                                faceVertices.last()->z);
@@ -288,6 +286,3 @@ void DisplayFile::imprimirObjetos() const {
         }
     }
 }
-
-
-
