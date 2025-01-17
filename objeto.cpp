@@ -49,7 +49,7 @@ void Objeto::transformarPontos(Matriz composta){
         matrizPonto(0,0) = this->pontos[i]->x;
         matrizPonto(1,0) = this->pontos[i]->y;
         matrizPonto(2,0) = this->pontos[i]->z;
-        matrizPonto(3,0) = this->pontos[i]->coordW;
+        matrizPonto(3,0) = this->pontos[i]->w;
         //std::cout << "matriz ponto antes" << endl;
         //matrizPonto.imprimir();
         matrizPonto = composta * matrizPonto;
@@ -57,7 +57,7 @@ void Objeto::transformarPontos(Matriz composta){
         this->pontos[i]->x = matrizPonto(0,0);
         this->pontos[i]->y = matrizPonto(1,0);
         this->pontos[i]->z = matrizPonto(2,0);
-        this->pontos[i]->coordW = matrizPonto(3,0);
+        this->pontos[i]->w = matrizPonto(3,0);
         //std::cout << "matriz ponto depois" << endl;
         //matrizPonto.imprimir();
     }
@@ -71,19 +71,19 @@ void Objeto::transformarPontosWin(Matriz composta){ //exatamente igual à acima,
         Matriz matrizPonto(3,1);
         matrizPonto(0,0) = this->pontos[i]->xWin;
         matrizPonto(1,0) = this->pontos[i]->yWin;
-        matrizPonto(2,0) = this->pontos[i]->coordWWin;
+        matrizPonto(2,0) = this->pontos[i]->wWin;
         //std::cout << "matriz ponto antes" << endl;
         //matrizPonto.imprimir();
         matrizPonto = composta * matrizPonto;
 
         this->pontos[i]->xWin = matrizPonto(0,0);
         this->pontos[i]->yWin = matrizPonto(1,0);
-        this->pontos[i]->coordWWin = matrizPonto(2,0);
+        this->pontos[i]->wWin = matrizPonto(2,0);
         //std::cout << "matriz ponto depois" << endl;
         //matrizPonto.imprimir();
     }
 }
-void Objeto::alinharPontosWin(Matriz composta){ //exatamente igual à acima, apenas para as
+void Objeto::   alinharPontosWin(Matriz composta){ //exatamente igual à acima, apenas para as
     //coordenadas virtuais.
     //std::cout << "composta"<<endl;
     //composta.imprimir();
@@ -92,15 +92,24 @@ void Objeto::alinharPontosWin(Matriz composta){ //exatamente igual à acima, ape
         matrizPonto(0,0) = this->pontos[i]->xWin;
         matrizPonto(1,0) = this->pontos[i]->yWin;
         matrizPonto(2,0) = this->pontos[i]->zWin;
-        matrizPonto(3,0) = this->pontos[i]->coordWWin;
+        matrizPonto(3,0) = this->pontos[i]->wWin;
         //std::cout << "matriz ponto antes" << endl;
         //matrizPonto.imprimir();
         matrizPonto = composta * matrizPonto;
 
-        this->pontos[i]->xWin = matrizPonto(0,0);
-        this->pontos[i]->yWin = matrizPonto(1,0);
-        this->pontos[i]->zWin = matrizPonto(2,0);
-        this->pontos[i]->coordWWin = matrizPonto(3,0);
+        if (matrizPonto(3,0) != 0) {
+            this->pontos[i]->xWin = matrizPonto(0,0) /= matrizPonto(3,0);
+            this->pontos[i]->yWin = matrizPonto(1,0) /= matrizPonto(3,0);
+            this->pontos[i]->zWin = matrizPonto(2,0);
+            this->pontos[i]->wWin = matrizPonto(3,0) /= matrizPonto(3,0);
+         } else {
+             // Opcional: Tratar o caso para evitar que NaN seja propagado
+             this->pontos[i]->xWin = 0;
+             this->pontos[i]->yWin = 0;
+             this->pontos[i]->zWin = 0;
+             this->pontos[i]->wWin = 1;
+         }
+
         //std::cout << "matriz ponto depois" << endl;
         //matrizPonto.imprimir();
     }
@@ -110,6 +119,7 @@ void Objeto::ajustarSCN(){
         p->xWin = p->x;
         p->yWin = p->y;
         p->zWin = p->z;
+        p->wWin = 1;
     }
 }
 void Objeto::clipping(float xmin,float xmax, float ymin, float ymax){

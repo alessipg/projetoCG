@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+
 #define DESLOCAMENTO 10
 
 MainWindow::MainWindow(QWidget *parent)
@@ -7,88 +8,128 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    // Conectar o botão ao slot passando o texto como parâmetro
-    //não consegui usar a interface do QTCreator para passar parâmetros
-    connect(ui->btnPokemon, &QPushButton::clicked, this, [=]() {
-        QString buttonText = ui->btnPokemon->text();
-        ui->frame->desenharObjeto(buttonText);
-    });
-    connect(ui->btnQuadrado, &QPushButton::clicked, this, [=]() {
-        QString buttonText = ui->btnQuadrado->text();
-        ui->frame->desenharObjeto(buttonText);
-    });
-    connect(ui->btnTriangulo, &QPushButton::clicked, this, [=]() {
-        QString buttonText = ui->btnTriangulo->text();
-        ui->frame->desenharObjeto(buttonText);
-    });
-    connect(ui->btnLinha, &QPushButton::clicked, this, [=]() {
-        QString buttonText = ui->btnLinha->text();
-        ui->frame->desenharObjeto(buttonText);
-    });
+
+    QButtonGroup *eixos = new QButtonGroup(this);
+    QButtonGroup *centros = new QButtonGroup(this);
+    eixos->addButton(ui->rotX);
+    eixos->addButton(ui->rotY);
+    eixos->addButton(ui->rotZ);
+
+    centros->addButton(ui->rotCharizard);
+    centros->addButton(ui->rotPorygon);
+    centros->addButton(ui->rotSi);
+
+    centros->setExclusive(true);
+    eixos->setExclusive(true);
 
     //TRANSLACOES
     connect(ui->xMais, &QPushButton::clicked, this, [=](){
-        ui->frame->transformarObjeto('T',ui->valorT->value(),0,0,0);
+        ui->frame->transformarObjeto('T',ui->valorT->value(),0,0,0,checkCentro());
     });
     connect(ui->xMenos, &QPushButton::clicked, this, [=](){
-        ui->frame->transformarObjeto('T',-ui->valorT->value(),0,0,0);
+        ui->frame->transformarObjeto('T',-ui->valorT->value(),0,0,0,checkCentro());
     });
     connect(ui->yMais, &QPushButton::clicked, this, [=](){
-        ui->frame->transformarObjeto('T',0,ui->valorT->value(),0,0);
+        ui->frame->transformarObjeto('T',0,ui->valorT->value(),0,0,checkCentro());
     });
     connect(ui->yMenos, &QPushButton::clicked, this, [=](){
-        ui->frame->transformarObjeto('T',0,-ui->valorT->value(),0,0);
+        ui->frame->transformarObjeto('T',0,-ui->valorT->value(),0,0,checkCentro());
     });
     connect(ui->zMais, &QPushButton::clicked, this, [=](){
-        ui->frame->transformarObjeto('T',0,0,ui->valorT->value(),0);
+        ui->frame->transformarObjeto('T',0,0,ui->valorT->value(),0,checkCentro());
     });
     connect(ui->zMenos, &QPushButton::clicked, this, [=](){
-        ui->frame->transformarObjeto('T',0,0,-ui->valorT->value(),0);
+        ui->frame->transformarObjeto('T',0,0,-ui->valorT->value(),0,checkCentro());
     });
 
     //ESCALA
     connect(ui->xEscMais, &QPushButton::clicked, this, [=](){
-        ui->frame->transformarObjeto('E',ui->valorE->value(),1,1,0);
+        ui->frame->transformarObjeto('E',ui->valorE->value(),1,1,0,checkCentro());
     });
     connect(ui->yEscMais, &QPushButton::clicked, this, [=](){
-        ui->frame->transformarObjeto('E',1,ui->valorE->value(),1,0);
+        ui->frame->transformarObjeto('E',1,ui->valorE->value(),1,0,checkCentro());
     });
     connect(ui->zEscMais, &QPushButton::clicked, this, [=](){
-        ui->frame->transformarObjeto('E',1,1,ui->valorE->value(),0);
+        ui->frame->transformarObjeto('E',1,1,ui->valorE->value(),0,checkCentro());
     });
     connect(ui->allEscala, &QPushButton::clicked, this, [=](){
-        ui->frame->transformarObjeto('E',ui->valorE->value(),ui->valorE->value(),ui->valorE->value(),0);
+        ui->frame->transformarObjeto('E',ui->valorE->value(),ui->valorE->value(),ui->valorE->value(),0,checkCentro());
     });
 
 
     //ROTACAO
     connect(ui->rotMais, &QPushButton::clicked, this, [=](){
         char eixo = checkEixo();
-        if(eixo == -1)
-            ui->statusbar->showMessage("Selecione um eixo para rotacionar",5);
+        if(eixo == -1){
+            ui->statusbar->showMessage("Selecione um eixo para rotacionar",5000);
+        }
         else
-            ui->frame->transformarObjeto('R',ui->valorR->value(),0,0,eixo);
+            ui->frame->transformarObjeto('R',ui->valorR->value(),0,0,eixo,checkCentro());
     });
     connect(ui->rotMenos, &QPushButton::clicked, this, [=](){
         char eixo = checkEixo();
         if(eixo == -1)
-            ui->statusbar->showMessage("Selecione um eixo para rotacionar",5);
+            ui->statusbar->showMessage("Selecione um eixo para rotacionar",5000);
         else
-            ui->frame->transformarObjeto('R',-ui->valorR->value(),0,0,eixo);
+            ui->frame->transformarObjeto('R',-ui->valorR->value(),0,0,eixo,checkCentro());
+    });
+    connect(ui->btnOrtogonal, &QRadioButton::clicked, this, [=]() {
+        ui->frame->isPerspectiva = false;
+        ui->frame->pipeline();
+    });
+    connect(ui->btnPerspectiva, &QRadioButton::clicked, this, [=]() {
+        ui->frame->isPerspectiva = true;
+        ui->frame->pipeline();
     });
 
-    connect(ui->cbWindow, &QCheckBox::stateChanged, this, [=](int state) {
-        //lógica para definir modificação na window ou no cenário
-        if (state == Qt::Checked) {
-            ui->frame->isWindow = true;
-            ui->frame->objAtual = ui->frame->window;  // Foco no objeto window
-        } else {
-            ui->frame->isWindow = false;
-            // Retorna ao último objeto alvo, caso exista
-            ui->frame->objAtual = !ui->frame->objetoAlvo.isEmpty() ? ui->frame->getObjetoByName(ui->frame->objetoAlvo) : nullptr;
+    connect(ui->rbWindow, &QRadioButton::clicked, this, [=](bool checked) {
+        if (checked) {
+            ui->frame->objAtual = ui->frame->getObjetoByName("Window");  // Focus on the Charizard object
         }
     });
 
+    connect(ui->rbCharizard, &QRadioButton::clicked, this, [=](bool checked) {
+        if (checked) {
+            ui->frame->objAtual = ui->frame->getObjetoByName("Charizard");  // Focus on the Charizard object
+        }
+    });
+
+    connect(ui->rbPorygon, &QRadioButton::clicked, this, [=](bool checked) {
+        if (checked) {
+            ui->frame->objAtual = ui->frame->getObjetoByName("Porygon");  // Focus on the Porygon object
+        }
+    });
+
+    connect(ui->rotPorygon, &QRadioButton::clicked, this, [=](bool checked) {
+        if (checked) {
+            ui->frame->objCentro = ui->frame->getObjetoByName("Porygon");  // Focus on the Porygon object
+        }
+    });
+
+    connect(ui->rotCharizard, &QRadioButton::clicked, this, [=](bool checked) {
+        if (checked) {
+            ui->frame->objCentro = ui->frame->getObjetoByName("Charizard");  // Focus on the Porygon object
+        }
+    });
+
+    connect(ui->rotSi, &QRadioButton::clicked, this, [=](bool checked) {
+        if (checked) {
+            ui->frame->objCentro = ui->frame->objAtual;  // Focus on the Porygon object
+        }
+    });
+
+
+
+}
+
+char MainWindow::checkCentro(){
+    if(ui->rotSi->isChecked())
+        return 'S';
+    else if(ui->rotCharizard->isChecked())
+        return 'C';
+    else if(ui->rotPorygon->isChecked())
+        return 'P';
+    else return -1;
 }
 char MainWindow::checkEixo(){
     if(ui->rotX->isChecked())

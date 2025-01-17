@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
+  <property name="enabled">
+   <bool>true</bool>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -10,8 +13,20 @@
     <height>651</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>1113</width>
+    <height>651</height>
+   </size>
+  </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Visualizador 3D</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="FramePrincipal" name="frame">
@@ -36,9 +51,9 @@
    <widget class="QWidget" name="verticalLayoutWidget_3">
     <property name="geometry">
      <rect>
-      <x>800</x>
+      <x>790</x>
       <y>10</y>
-      <width>301</width>
+      <width>311</width>
       <height>581</height>
      </rect>
     </property>
@@ -270,37 +285,85 @@
           </layout>
          </item>
          <item>
-          <widget class="QLabel" name="label_11">
-           <property name="text">
-            <string>Eixo</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <layout class="QVBoxLayout" name="verticalLayout_2">
-           <property name="spacing">
-            <number>0</number>
-           </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_5">
            <item>
-            <widget class="QRadioButton" name="rotX">
-             <property name="text">
-              <string>X</string>
+            <layout class="QVBoxLayout" name="verticalLayout_2">
+             <property name="spacing">
+              <number>0</number>
              </property>
-            </widget>
+             <item>
+              <widget class="QLabel" name="label_11">
+               <property name="text">
+                <string>Eixo</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="rotX">
+               <property name="text">
+                <string>X</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="rotY">
+               <property name="text">
+                <string>Y</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="rotZ">
+               <property name="text">
+                <string>Z</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
            <item>
-            <widget class="QRadioButton" name="rotY">
-             <property name="text">
-              <string>Y</string>
+            <layout class="QVBoxLayout" name="verticalLayout_4">
+             <property name="spacing">
+              <number>0</number>
              </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QRadioButton" name="rotZ">
-             <property name="text">
-              <string>Z</string>
-             </property>
-            </widget>
+             <item>
+              <widget class="QLabel" name="label_10">
+               <property name="text">
+                <string>Girar em torno de:</string>
+               </property>
+               <property name="margin">
+                <number>0</number>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="rotSi">
+               <property name="text">
+                <string>Si mesmo</string>
+               </property>
+               <property name="checked">
+                <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="rotCharizard">
+               <property name="text">
+                <string>Charizard</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QRadioButton" name="rotPorygon">
+               <property name="text">
+                <string>Porygon</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
           </layout>
          </item>
@@ -333,43 +396,87 @@
      <rect>
       <x>10</x>
       <y>100</y>
-      <width>160</width>
+      <width>161</width>
       <height>172</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_6">
      <item>
-      <widget class="QPushButton" name="btnPokemon">
+      <widget class="QLabel" name="label_9">
        <property name="text">
-        <string>Pokemon</string>
+        <string>Objeto selecionado</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="btnTriangulo">
-       <property name="text">
-        <string>Triângulo</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="btnQuadrado">
-       <property name="text">
-        <string>Cubo</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="btnLinha">
-       <property name="text">
-        <string>Linha</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QCheckBox" name="cbWindow">
+      <widget class="QRadioButton" name="rbWindow">
        <property name="text">
         <string>Window</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="rbPorygon">
+       <property name="text">
+        <string>Porygon</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="rbCharizard">
+       <property name="text">
+        <string>Charizard</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="verticalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>370</y>
+      <width>161</width>
+      <height>114</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_3">
+     <item>
+      <widget class="QLabel" name="label_4">
+       <property name="frameShape">
+        <enum>QFrame::Shape::NoFrame</enum>
+       </property>
+       <property name="text">
+        <string>Tipo de projeção</string>
+       </property>
+       <property name="margin">
+        <number>0</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="btnOrtogonal">
+       <property name="text">
+        <string>Ortogonal</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="btnPerspectiva">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="text">
+        <string>Pespectiva</string>
+       </property>
+       <property name="checked">
+        <bool>false</bool>
        </property>
       </widget>
      </item>

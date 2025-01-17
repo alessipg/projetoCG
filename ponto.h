@@ -8,14 +8,14 @@ public:
     float x;
     float y;
     float z;
-    float coordW;
     float xWin; //coordenadas virtuais
     float yWin; //
     float zWin;
-    float coordWWin;//
+    float w;
+    float wWin;//
     int cor;
-    bool rc[4];//clipping
-    void calcularOutcode(float xmin, float xmax, float ymin, float ymax) ;
+    bool rc[6];//clipping
+    void calcularOutcode(float xmin, float xmax, float ymin, float ymax, float zmin, float zmax) ;
 };
 
 #endif // PONTO_H

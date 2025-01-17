@@ -22,6 +22,16 @@ Window::Window(QString nome, QList<Ponto*> pontos, QList<Aresta*> arestas) : Obj
     this->pontos.append(viewUp);
     this->viewUp = viewUp;
     this->medio = VRP;
+
+    // zmin: Ponto base com o mesmo valor de VRP
+    this->zmin = new Ponto(this->VRP->x, this->VRP->y, this->VRP->z - 1000);
+
+    // zmax: Ponto com z ajustado
+    this->zmax = new Ponto(this->VRP->x, this->VRP->y, this->VRP->z + 1000);
+
+    // Adiciona zmin e zmax à lista de pontos
+    this->pontos.append(this->zmin);
+    this->pontos.append(this->zmax);
 }
 /*
  * 3---------------------2
@@ -36,13 +46,25 @@ Window::Window(QString nome, QList<Ponto*> pontos, QList<Aresta*> arestas) : Obj
  *           500
  */
 float Window::getLargura(){
-    return sqrt(pow(this->pontos[1]->x-this->pontos[0]->x,2)
-                +pow(this->pontos[1]->y-this->pontos[0]->y,2)+pow(this->pontos[1]->z-this->pontos[0]->z,2));
+    return sqrt(pow(this->pontos[1]->x-this->pontos[0]->x,2) +
+                pow(this->pontos[1]->y-this->pontos[0]->y,2) +
+                pow(this->pontos[1]->z-this->pontos[0]->z,2));
 }
 float Window::getAltura(){
-    return sqrt(pow(this->pontos[3]->x-this->pontos[0]->x,2)
-                +pow(this->pontos[3]->y-this->pontos[0]->y,2)+pow(this->pontos[3]->z-this->pontos[0]->z,2));
+    return sqrt(pow(this->pontos[3]->x-this->pontos[0]->x,2) +
+                pow(this->pontos[3]->y-this->pontos[0]->y,2) +
+                pow(this->pontos[3]->z-this->pontos[0]->z,2));
 
+}
+float Window::getProfundidade() {
+    return sqrt(pow(this->zmax->x - this->zmin->x, 2) +
+                pow(this->zmax->y - this->zmin->y, 2) +
+                pow(this->zmax->z - this->zmin->z, 2));
+}
+float Window::getDistanciaFocal() {
+    return sqrt(pow(this->VRP->x - this->COP->x, 2) +
+                pow(this->VRP->y - this->COP->y, 2) +
+                pow(this->VRP->z - this->COP->z, 2));
 }
 Window::~Window() {
     this->pontos.removeOne(VRP);  // Remove centro de pontos
