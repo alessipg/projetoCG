@@ -9,7 +9,8 @@ public:
     Ponto *a;
     Ponto *b;
     bool desenha;
-    bool clipping(float xmin, float xmax, float ymin, float ymax);
+    int cor;
+    bool clipping(float xmin, float xmax, float ymin, float ymax, float zmin, float zmax);
 };
 
 #endif // ARESTA_H

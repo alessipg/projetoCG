@@ -11,10 +11,12 @@ public:
     Ponto *viewUp;
     Ponto *VPN;
     Ponto *COP;
-    float altura;
-    float largura;
+    Ponto *zmin;
+    Ponto *zmax;
     float getLargura();
     float getAltura();
+    float getProfundidade();
+    float getDistanciaFocal();
 };
 
 #endif // WINDOW_H

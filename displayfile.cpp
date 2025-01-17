@@ -111,25 +111,53 @@ void DisplayFile::gerarObjetos() {
     };
 
     Objeto* obj3 = new Objeto{"Cubo", pontos3, arestas3};
-    this->displayFile.append(obj3);
-
-    carregarArquivo();
-
+    // this->displayFile.append(obj3);
+    // QList<Ponto*> pontos4 = {
+    //     new Ponto(-2000,0,0),
+    //     new Ponto(2000,0,0),
+    //     new Ponto(0,-2000,0),
+    //     new Ponto(0,2000,0),
+    //     new Ponto(0,0,-2000),
+    //     new Ponto(0,0,2000)
+    // };
+    // QList<Aresta*> arestas4 = {
+    //     new Aresta(pontos4[0],pontos4[1]),
+    //     new Aresta(pontos4[2],pontos4[3]),
+    //     new Aresta(pontos4[4],pontos4[5])
+    // };
+    // arestas4[0]->cor = 0;
+    // arestas4[1]->cor = 1;
+    // arestas4[2]->cor = 2;
+    // Objeto* obj4 = new Objeto{"Eixos", pontos4, arestas4};
+    // this->displayFile.append(obj4);
+    carregarArquivos();
+    this->window = dynamic_cast<Window*>(this->displayFile[0]);
     //imprimirObjetos();
 }
 
-void DisplayFile::aplicarClipping(){
+void DisplayFile::aplicarClipping(bool isPerspectiva){
     // Aqui está aplicando em todos os objetos do displayfile, talvez
     // tenha que mudar isso lá na frente
-    for(int i = 1;i<this->displayFile.length();i++){
-        for (Aresta* aresta : this->displayFile[i]->arestas) {
-            aresta->clipping(this->displayFile[0]->pontos[0]->xWin,
-                             this->displayFile[0]->pontos[2]->xWin,
-                             this->displayFile[0]->pontos[0]->yWin,
-                             this->displayFile[0]->pontos[2]->yWin);
-        }
-
+    Ponto *zmin;
+    Ponto *zmax;
+    if(isPerspectiva){
+        zmin = new Ponto(0,0,this->window->VRP->zWin/2);
+        zmax = new Ponto(0,0,this->window->VRP->zWin+1);
+    }else{
+        zmin = new Ponto(0,0,this->window->zmin->zWin+this->window->zmax->zWin);
+        zmax = new Ponto(0,0,this->window->zmax->zWin);
     }
+    for (int i = 1; i < this->displayFile.length(); i++) {
+        for (Aresta* aresta : this->displayFile[i]->arestas) {
+            aresta->clipping(this->window->pontos[0]->xWin,
+                             this->window->pontos[2]->xWin,
+                             this->window->pontos[0]->yWin,
+                             this->window->pontos[2]->yWin,
+                             zmin->z,
+                             zmax->z);
+        }
+    }
+
 }
 
 void DisplayFile::transformada(Matriz composta){
@@ -139,6 +167,7 @@ void DisplayFile::transformada(Matriz composta){
 }
 void DisplayFile::alinhamento(Matriz composta){
     for(Objeto* obj : this->displayFile){
+        //std::cout<<obj->nome.toStdString()<<endl;
         obj->alinharPontosWin(composta);
     }
 }
@@ -150,7 +179,7 @@ DisplayFile::~DisplayFile() {
     displayFile.clear();
 }
 
-void DisplayFile::carregarArquivo() {
+void DisplayFile::carregarArquivos() {
     // Obter o diretório do executável
     QString executavelPath = QCoreApplication::applicationDirPath();
 
@@ -160,91 +189,100 @@ void DisplayFile::carregarArquivo() {
     // Caminho para a pasta "objetos"
     QString pastaObjetos = QDir(pastaProjeto).filePath("objetos");
 
-    // Caminho completo para o arquivo .obj
-    QString arquivoPath = QDir(pastaObjetos).filePath("charizard.obj");
+    // Obter todos os arquivos .obj na pasta
+    QDir dir(pastaObjetos);
+    QStringList filtros;
+    filtros << "*.obj"; // Apenas arquivos .obj
+    QFileInfoList listaArquivos = dir.entryInfoList(filtros, QDir::Files);
 
-    QFile file(arquivoPath);
+    // Iterar sobre os arquivos
+    for (const QFileInfo& arquivoInfo : listaArquivos) {
+        QString arquivoPath = arquivoInfo.absoluteFilePath();
 
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qWarning() << "Erro ao abrir o arquivo:" << file.errorString();
-        qWarning() << "Caminho do arquivo tentado:" << arquivoPath;
-        return;
-    }
+        QFile file(arquivoPath);
 
-    QList<Ponto*> vertices; // Lista de vértices únicos
-    QList<Ponto*> pontosDuplicados; // Lista de pontos duplicados para arestas
-    QList<Aresta*> arestas; // Lista de arestas
+        if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            qWarning() << "Erro ao abrir o arquivo:" << file.errorString();
+            qWarning() << "Caminho do arquivo tentado:" << arquivoPath;
+            continue;
+        }
 
-    QTextStream in(&file);
+        QList<Ponto*> vertices; // Lista de vértices únicos
+        QList<Ponto*> pontosDuplicados; // Lista de pontos duplicados para arestas
+        QList<Aresta*> arestas; // Lista de arestas
 
-    while (!in.atEnd()) {
-        QString line = in.readLine().trimmed();
-        QStringList parts = line.split(" ", Qt::SkipEmptyParts);
+        QTextStream in(&file);
 
-        if (parts.isEmpty()) continue;
+        while (!in.atEnd()) {
+            QString line = in.readLine().trimmed();
+            QStringList parts = line.split(" ", Qt::SkipEmptyParts);
 
-        if (parts[0] == "v") {
-            // Leitura de vértices
-            float x = parts[1].toFloat();
-            float y = parts[2].toFloat();
-            float z = parts[3].toFloat();
-            vertices.append(new Ponto(x, y, z));
-        } else if (parts[0] == "f") {
-            // Criar lista de pontos duplicados para esta face
-            QList<Ponto*> faceVertices;
-            for (int i = 1; i < parts.size(); ++i) {
-                QString vertexData = parts[i];
-                int vertexIndex = vertexData.split("/")[0].toInt() - 1; // Índices começam em 1 no .obj
+            if (parts.isEmpty()) continue;
 
-                if (vertexIndex < 0 || vertexIndex >= vertices.size()) {
-                    qWarning() << "Índice de vértice inválido:" << vertexIndex;
-                    continue;
+            if (parts[0] == "v") {
+                // Leitura de vértices
+                float x = parts[1].toFloat();
+                float y = parts[2].toFloat();
+                float z = parts[3].toFloat();
+                vertices.append(new Ponto(x, y, z));
+            } else if (parts[0] == "f") {
+                // Criar lista de pontos duplicados para esta face
+                QList<Ponto*> faceVertices;
+                for (int i = 1; i < parts.size(); ++i) {
+                    QString vertexData = parts[i];
+                    int vertexIndex = vertexData.split("/")[0].toInt() - 1; // Índices começam em 1 no .obj
+
+                    if (vertexIndex < 0 || vertexIndex >= vertices.size()) {
+                        qWarning() << "Índice de vértice inválido:" << vertexIndex;
+                        continue;
+                    }
+
+                    // Criar um novo ponto duplicado com base no vértice original
+                    Ponto* pontoDuplicado = new Ponto(vertices[vertexIndex]->x,
+                                                      vertices[vertexIndex]->y,
+                                                      vertices[vertexIndex]->z);
+                    faceVertices.append(pontoDuplicado);
+
+                    // Criar uma aresta conectando ao ponto anterior
+                    if (i > 1) {
+                        Ponto* pontoAnterior = new Ponto(faceVertices[i - 2]->x,
+                                                         faceVertices[i - 2]->y,
+                                                         faceVertices[i - 2]->z);
+                        Ponto* pontoAtual = new Ponto(faceVertices[i - 1]->x,
+                                                      faceVertices[i - 1]->y,
+                                                      faceVertices[i - 1]->z);
+                        arestas.append(new Aresta(pontoAnterior, pontoAtual));
+                        pontosDuplicados.append(pontoAnterior);
+                        pontosDuplicados.append(pontoAtual);
+                    }
                 }
 
-                // Criar um novo ponto duplicado com base no vértice original
-                Ponto* pontoDuplicado = new Ponto(vertices[vertexIndex]->x,
-                                                  vertices[vertexIndex]->y,
-                                                  vertices[vertexIndex]->z);
-                faceVertices.append(pontoDuplicado);
-
-                // Criar uma aresta conectando ao ponto anterior
-                if (i > 1) {
-                    Ponto* pontoAnterior = new Ponto(faceVertices[i - 2]->x,
-                                                     faceVertices[i - 2]->y,
-                                                     faceVertices[i - 2]->z);
-                    Ponto* pontoAtual = new Ponto(faceVertices[i - 1]->x,
-                                                  faceVertices[i - 1]->y,
-                                                  faceVertices[i - 1]->z);
-                    arestas.append(new Aresta(pontoAnterior, pontoAtual));
-                    pontosDuplicados.append(pontoAnterior);
-                    pontosDuplicados.append(pontoAtual);
+                // Fechar a face se for um polígono (opcional)
+                if (faceVertices.size() > 2) {
+                    Ponto* primeiroPonto = new Ponto(faceVertices.first()->x,
+                                                     faceVertices.first()->y,
+                                                     faceVertices.first()->z);
+                    Ponto* ultimoPonto = new Ponto(faceVertices.last()->x,
+                                                   faceVertices.last()->y,
+                                                   faceVertices.last()->z);
+                    arestas.append(new Aresta(ultimoPonto, primeiroPonto));
+                    pontosDuplicados.append(primeiroPonto);
+                    pontosDuplicados.append(ultimoPonto);
                 }
-            }
-
-            // Fechar a face se for um polígono (opcional)
-            if (faceVertices.size() > 2) {
-                Ponto* primeiroPonto = new Ponto(faceVertices.first()->x,
-                                                 faceVertices.first()->y,
-                                                 faceVertices.first()->z);
-                Ponto* ultimoPonto = new Ponto(faceVertices.last()->x,
-                                               faceVertices.last()->y,
-                                               faceVertices.last()->z);
-                arestas.append(new Aresta(ultimoPonto, primeiroPonto));
-                pontosDuplicados.append(primeiroPonto);
-                pontosDuplicados.append(ultimoPonto);
             }
         }
+
+        // Criar o objeto e adicioná-lo ao DisplayFile
+        QString nomeObjeto = arquivoInfo.baseName(); // Nome do arquivo sem extensão
+        Objeto* obj = new Objeto(nomeObjeto, pontosDuplicados, arestas);
+        this->displayFile.append(obj);
+
+        qDebug() << "Objeto '" << nomeObjeto << "' adicionado ao DisplayFile com"
+                 << pontosDuplicados.size() << "pontos e"
+                 << arestas.size() << "arestas.";
+
+        file.close();
     }
-
-    // Criar o objeto e adicioná-lo ao DisplayFile
-    Objeto* obj = new Objeto("Pokemon", pontosDuplicados, arestas);
-    this->displayFile.append(obj);
-
-    qDebug() << "Objeto 'Pokemon' adicionado ao DisplayFile com"
-             << pontosDuplicados.size() << "pontos e"
-             << arestas.size() << "arestas.";
-
-    file.close();
 }
 
 

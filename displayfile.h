@@ -9,11 +9,12 @@ public:
     DisplayFile();
     ~DisplayFile();
     QList<Objeto*> displayFile;
+    Window *window;
     void gerarObjetos();
     void transformada(Matriz composta);
     void alinhamento(Matriz composta);
-    void aplicarClipping();
-    void carregarArquivo();
+    void aplicarClipping(bool isPerspectiva);
+    void carregarArquivos();
     void imprimirObjetos() const;
 };
 

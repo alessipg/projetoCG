@@ -1,105 +1,82 @@
 #include "frameprincipal.h"
 #include <iostream>
 #include <math.h>
-#include <mainwindow.h>
+
 
 FramePrincipal::FramePrincipal(QWidget *parent)
     : QFrame{parent}
 {
     df.gerarObjetos();
-    this->objAtual = nullptr;
-    this->isWindow = false;
     //ponteiro para window no displayfile, mais facil de realizar as manipulações
     this->window = dynamic_cast<Window*>(df.displayFile[0]);
+    this->isPerspectiva = false;
+    this->objAtual = this->window;
+    this->objCentro = this->window;
+    ajustarPosicionamento();
+    this->objAtual = this->window;
+    this->objCentro = this->getObjetoByName("Charizard");
     //chamada necessária após toda transformação
     pipeline();
 }
-/*********************************************************************************************
- *              PIPELINE DE VISUALIZAÇÃO
- *  1.TRANSFORMAÇÃO DE OBJETOS COM COORDENADAS DE MUNDO
- *  2.ROTINA WINDOW
- *  2.1.COPIA COORDENADAS DE MUNDO PARA WIN (ATRIBUTOS CLASSE PONTO)
- *  2.2.GERA MATRIZ DE TRANSLAÇÃO E ROTAÇÃO PARA AJUSTE DA WINDOW COM O CARTESIANO
- *  2.3.APLICA NAS COORDENADAS WIN
- *  2.4.APLICA CLIPPING DE LINHAS (NÃO FUNCIONA PARA POLIGONOS, CASO A SE TRATAR DEPOIS DO 3D
- *      E PROVAVELMENTE TEREMOS QUE COMEÇAR A GERAR MAIS OBJETOS COM HERANÇA, VISTO QUE O CLIPPING
- *      DE LINHAS ESTÁ NA CLASSE ARESTA)
- *  2.5.ESCALA E TRANSLAÇÃO DE ACORDO COM A VIEWPORT
- *  3.ATUALIZAÇÃO DO WIDGET
- ********************************************************************************************/
 
 Objeto* FramePrincipal::getObjetoByName(const QString& nome) {
-    for (Objeto* obj : df.displayFile) {  // `objetos` é uma lista com todos os objetos da cena
+    for (Objeto* obj : df.displayFile) {
         if (obj->nome == nome) {
             return obj;
         }
     }
-    return nullptr;  // Retorna nullptr se não encontrar
+    return nullptr;
 }
-/*Esse método funciona para qualquer objeto, basta ter
- * todas as arestas definidas. Pensei em tratar, por exemplo, o caso do quadrado
- * adicionando 2 construtores: 1 recebendo os 4 pontos e o outro transformando os
- * 2 pontos recebidos em 4, já que teria que calcular toda vez que fosse desenhado.
-*/
+
 void FramePrincipal::paintEvent(QPaintEvent *event) {
     QFrame::paintEvent(event);
     QPainter painter(this);
+    painter.setPen(QPen(Qt::cyan,1));
 
-    /*  Com a transformada não precisa mais inverter o eixo Y, isso porque inverti o valor Y no
- *  escalonamento (não encontrei em lugar nenhum a afirmação disso ser correto), então vou
- *  manter o código aqui para caso isso atrapalhe eventualmente
- */
-    //painter.translate(0, height()); // Move o ponto de origem para o canto inferior esquerdo
-    //painter.scale(1, -1);           // Inverte o eixo Y
-    painter.setPen(QPen(Qt::red,1));
-
-    //desenhando window para ver se as alterações estão corretas
+    //desenhando a viewport
     for(Aresta* aresta: window->arestas){
         painter.drawLine(aresta->a->xWin, aresta->a->yWin, aresta->b->xWin, aresta->b->yWin);
-        //qDebug() << "a " << aresta->a->x <<aresta->a->y << "b"<<aresta->b->x<< aresta->b->y;
     }
 
     for (Objeto *obj : df.displayFile) {
-        if (obj->nome == objetoAlvo) {
+        //if (obj->nome == objetoAlvo) {
             for (Aresta *aresta : obj->arestas) {
                 if(aresta->desenha){
                     //qDebug() <<aresta->desenha<< "a " << aresta->a->xWin <<aresta->a->yWin << "b"<<aresta->b->xWin<< aresta->b->yWin;
                     painter.drawLine(aresta->a->xWin, aresta->a->yWin, aresta->b->xWin, aresta->b->yWin);
                 }
             }
-            this->objAtual = obj;
-            break;
+            //break;
+        //}
+    }
+}
+
+void FramePrincipal::transformarObjeto(char op,double v1, double v2, double v3, char eixo, char centro) {
+
+    if (eixo == 0) {
+        switch(centro){
+            case 'S':
+                this->objCentro = this->objAtual;
+                break;
+            case 'P':
+                this->objCentro = getObjetoByName("Porygon");
+                break;
+            case 'C':
+                this->objCentro = getObjetoByName("Charizard");
+                break;
+            default:
+                return;
         }
     }
-}
 
-
-void FramePrincipal::desenharObjeto(const QString &buttonText) {
-    qDebug().noquote() << "Desenhando objeto:" << buttonText;
-    // armazena o nome do obj que será desenhado
-    objetoAlvo = buttonText;
-    pipeline();
-
-}
-
-void FramePrincipal::transformarObjeto(char op,double v1, double v2, double v3, char eixo) {
-    // Se a checkbox está marcada, alteramos o objeto a ser transformado para a janela
-    if (isWindow) {
-        objAtual = window;
-    }
-    if (!objAtual) {
-        qDebug() << "Sem objeto instanciado na cena";
-        return;
-    }
-
+    std::cout<<this->objAtual->nome.toStdString()<<" "<<this->objCentro->nome.toStdString()<<endl;
     Matriz composta(4, 4);
     composta = Matriz::gerarIdentidade(4, 4);
-
     // Move o objeto para a origem para realizar transformações
     composta = Matriz::translacao(
-                   -this->objAtual->medio->x,
-                   -this->objAtual->medio->y,
-                   -this->objAtual->medio->z
+                   -this->objCentro->medio->x,
+                   -this->objCentro->medio->y,
+                   -this->objCentro->medio->z
                    ) * composta;
 
     float translacaoX = 0;
@@ -126,9 +103,9 @@ void FramePrincipal::transformarObjeto(char op,double v1, double v2, double v3, 
 
     // Retorna o ponto original + translações solicitadas
     composta = Matriz::translacao(
-                   this->objAtual->medio->x + translacaoX,
-                   this->objAtual->medio->y + translacaoY,
-                   this->objAtual->medio->z + translacaoZ
+                   this->objCentro->medio->x + translacaoX,
+                   this->objCentro->medio->y + translacaoY,
+                   this->objCentro->medio->z + translacaoZ
                    ) * composta;
 
     // Aplica as alterações às coordenadas do objeto
@@ -137,39 +114,46 @@ void FramePrincipal::transformarObjeto(char op,double v1, double v2, double v3, 
     // Chama a transformada de viewport
     pipeline();
 }
+void FramePrincipal::ajustarPosicionamento(){
+    objAtual = getObjetoByName("Charizard");
+    transformarObjeto('T',180,100,200,0,'S');
+    transformarObjeto('E',10,10,10,0,'S');
+    transformarObjeto('R',180,0,0,'Y','S');
+
+    objAtual = getObjetoByName("Porygon");
+    transformarObjeto('T',380,30,200,0,'S');
+    transformarObjeto('E',1.3,1.3,1.3,0,'S');
+    transformarObjeto('R',180,0,0,'Y','S');
+}
 
 void FramePrincipal::pipeline(){
 
     for(Objeto* obj : this->df.displayFile){
         obj->ajustarSCN();
     }
-    // Calcular ângulos X, Y e Z
-    auto [anguloEixoX, anguloEixoY, anguloEixoZ] = calcularAngulos(*window->VPN,*window->viewUp);
+    Ponto centro;
+    if(this->isPerspectiva){
+        centro = *window->COP;
+    }else{
+        centro = *window->VRP;
+    }
+    auto [anguloEixoX, anguloEixoY, anguloEixoZ] = calcularAngulos(*window->VPN,*window->viewUp,centro);
 
     Matriz composta(4,4);
     composta = Matriz::gerarIdentidade(4,4);
-    composta = Matriz::translacao(-window->VRP->x,-window->VRP->y,-window->VRP->z) * composta;
+    composta = Matriz::translacao(-centro.x,-centro.y,-centro.z) * composta;
     composta = Matriz::rotacaoY(-anguloEixoY) * composta;
     composta = Matriz::rotacaoX(anguloEixoX) * composta;
     composta = Matriz::rotacaoZ(anguloEixoZ) * composta;
-    //std::cout << "Angulos calculados: X = " << anguloEixoX<< ", Y = " << anguloEixoY<< ", Z = " << anguloEixoZ << std::endl;
-    //composta.imprimir();
-    //composta.imprimir();
-    //precisa alinhar a window com os eixos para o clipping
-    //composta = Matriz::escalonamento(2/window->getLargura(),2/window->getAltura(),1)  * Matriz::gerarIdentidade(4,4);
+    if(this->isPerspectiva){
+        composta = Matriz::perspectiva(window->getDistanciaFocal()) * composta;
+    }
+    composta = Matriz::escalonamento(2/window->getLargura(),2/window->getAltura(),2/window->getProfundidade())  * composta;
     df.alinhamento(composta);
-    //std::cout<<"Depois ";
-    //std::cout<<"VPN "<<window->VPN->xWin<<", "<<window->VPN->yWin<<", "<<window->VPN->zWin;
-    //std::cout<<"ViewUp "<<window->viewUp->xWin<<", "<<window->viewUp->yWin<<", "<<window->viewUp->zWin<<endl;
-    //std::cout<<window->VPN->xWin<<" "<<window->VPN->yWin<<" "<<window->VPN->zWin<<endl;
-    //std::cout<<"Min "<<window->pontos[0]->xWin<<" "<<window->pontos[0]->yWin<<" "<<window->pontos[0]->zWin<<" ";
-    //std::cout<<"Max "<<window->pontos[2]->xWin<<" "<<window->pontos[2]->yWin<<" "<<window->pontos[2]->zWin<<" "<<endl;
-    //a partir daqui ignora-se o eixo Z
-    df.aplicarClipping();
+    df.aplicarClipping(this->isPerspectiva);
     // transformada de VP
     Matriz composta2(3,3);
     composta2 = Matriz::gerarIdentidade(3,3);
-    composta2 = Matriz::escalonamento2D(2/window->getLargura(),2/window->getAltura())  * composta2;
     composta2 = Matriz::translacao2D(1,1) * composta2;
     composta2 = Matriz::escalonamento2D(0.5,0.5)* composta2;
     composta2 = Matriz::escalonamento2D(1,-1) * composta2;
@@ -184,10 +168,10 @@ void FramePrincipal::pipeline(){
     update();
 }
 
-std::tuple<double, double, double> FramePrincipal::calcularAngulos(Ponto ponto, Ponto viewUp){
+std::tuple<double, double, double> FramePrincipal::calcularAngulos(Ponto ponto, Ponto viewUp,Ponto centro){
 
-    Ponto *vpn = new Ponto(ponto.xWin-window->VRP->xWin, ponto.yWin-window->VRP->yWin, ponto.zWin-window->VRP->zWin);
-    Ponto *vUp = new Ponto(viewUp.xWin-window->VRP->xWin, viewUp.yWin-window->VRP->yWin, viewUp.zWin-window->VRP->zWin);
+    Ponto *vpn = new Ponto(ponto.xWin-centro.xWin, ponto.yWin-centro.yWin, ponto.zWin-centro.zWin);
+    Ponto *vUp = new Ponto(viewUp.xWin-centro.xWin, viewUp.yWin-centro.yWin, viewUp.zWin-centro.zWin);
     Objeto obj;
     obj.pontos.append(vpn);
     obj.pontos.append(vUp);

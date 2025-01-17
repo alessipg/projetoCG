@@ -147,6 +147,19 @@ Matriz Matriz::escalonamento2D(float sx, float sy) {
     matrizEsc(1,1) = sy;
     return matrizEsc;
 }
+Matriz Matriz::perspectiva(float d){
+    Matriz persp(4,4);
+    persp = Matriz::gerarIdentidade(4,4);
+    persp(3,3) = 0;
+    persp(3,2) = 1/d;
+    return persp;
+}
+Matriz Matriz::normalizacao(float d){
+    Matriz norm(4,4);
+    norm = Matriz::gerarIdentidade(4,4);
+    norm(3,3) = d;
+    return norm;
+}
 
 // Função para imprimir a matriz
 void Matriz::imprimir() const {
