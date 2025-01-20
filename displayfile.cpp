@@ -9,10 +9,10 @@ DisplayFile::DisplayFile() {
 }
 
 void DisplayFile::gerarObjetos() {
-    /*  Para fazer o dynamic cast, deve se utilizar ponteiros, então todo o programa foi alterado.
- *  Agora todo obj de classe que herda de Objeto pode ser alocado no df, desde que tenha
- *  destrutor adequado.
- */
+   /*  Para fazer o dynamic cast, deve se utilizar ponteiros, então todo o programa foi alterado.
+    *  Agora todo obj de classe que herda de Objeto pode ser alocado no df, desde que tenha
+    *  destrutor adequado.
+    */
 
     QList<Ponto*> pontos0 = {
         new Ponto(0,0,0),
@@ -28,118 +28,17 @@ void DisplayFile::gerarObjetos() {
     };
     Window* obj0 = new Window{"Window", pontos0, arestas0};
     this->displayFile.append(obj0);
-    /*
-    // Linha
-    QList<Ponto*> pontos1 = {
-        new Ponto(100, 200),
-        new Ponto(200, 200)
-    };
-    QList<Aresta*> arestas1 = {
-        new Aresta(pontos1[0], pontos1[1])
-    };
-    Objeto* obj1 = new Objeto{"Linha", pontos1, arestas1};
-    this->displayFile.append(obj1);
 
-    // Triângulo
-    QList<Ponto*> pontos2 = {
-        new Ponto(50, 50),
-        new Ponto(300, 50),
-        new Ponto(300, 50),
-        new Ponto(200, 200),
-        new Ponto(200, 200),
-        new Ponto(50, 50)
-    };
-    QList<Aresta*> arestas2 = {
-        new Aresta(pontos2[0], pontos2[1]),
-        new Aresta(pontos2[2], pontos2[3]),
-        new Aresta(pontos2[4], pontos2[5])
-    };
-    Objeto* obj2 = new Objeto{"Triângulo", pontos2, arestas2};
-    this->displayFile.append(obj2);
-    */
-    // Quadrado
-    QList<Ponto*> pontos3 = {
-        // Frente (Z = 0)
-        new Ponto(100, 100, 0),  // Ponto 0
-        new Ponto(200, 100, 0),  // Ponto 1
-        new Ponto(200, 100, 0),  // Ponto 2
-        new Ponto(200, 200, 0),  // Ponto 3
-        new Ponto(200, 200, 0),  // Ponto 4
-        new Ponto(100, 200, 0),  // Ponto 5
-        new Ponto(100, 200, 0),  // Ponto 6
-        new Ponto(100, 100, 0),  // Ponto 7
-
-        // Trás (Z = -100)
-        new Ponto(100, 100, -100),  // Ponto 8
-        new Ponto(200, 100, -100),  // Ponto 9
-        new Ponto(200, 100, -100),  // Ponto 10
-        new Ponto(200, 200, -100),  // Ponto 11
-        new Ponto(200, 200, -100),  // Ponto 12
-        new Ponto(100, 200, -100),  // Ponto 13
-        new Ponto(100, 200, -100),  // Ponto 14
-        new Ponto(100, 100, -100),  // Ponto 15
-
-        // Conexões entre frente e trás
-        new Ponto(100, 100, 0),    // Ponto 16
-        new Ponto(100, 100, -100), // Ponto 17
-        new Ponto(200, 100, 0),    // Ponto 18
-        new Ponto(200, 100, -100), // Ponto 19
-        new Ponto(200, 200, 0),    // Ponto 20
-        new Ponto(200, 200, -100), // Ponto 21
-        new Ponto(100, 200, 0),    // Ponto 22
-        new Ponto(100, 200, -100)  // Ponto 23
-    };
-
-    QList<Aresta*> arestas3 = {
-        // Arestas da frente
-        new Aresta(pontos3[0], pontos3[1]),
-        new Aresta(pontos3[2], pontos3[3]),
-        new Aresta(pontos3[4], pontos3[5]),
-        new Aresta(pontos3[6], pontos3[7]),
-
-        // Arestas de trás
-        new Aresta(pontos3[8], pontos3[9]),
-        new Aresta(pontos3[10], pontos3[11]),
-        new Aresta(pontos3[12], pontos3[13]),
-        new Aresta(pontos3[14], pontos3[15]),
-
-        // Conexões entre frente e trás
-        new Aresta(pontos3[16], pontos3[17]),
-        new Aresta(pontos3[18], pontos3[19]),
-        new Aresta(pontos3[20], pontos3[21]),
-        new Aresta(pontos3[22], pontos3[23])
-    };
-
-    Objeto* obj3 = new Objeto{"Cubo", pontos3, arestas3};
-    // this->displayFile.append(obj3);
-    // QList<Ponto*> pontos4 = {
-    //     new Ponto(-2000,0,0),
-    //     new Ponto(2000,0,0),
-    //     new Ponto(0,-2000,0),
-    //     new Ponto(0,2000,0),
-    //     new Ponto(0,0,-2000),
-    //     new Ponto(0,0,2000)
-    // };
-    // QList<Aresta*> arestas4 = {
-    //     new Aresta(pontos4[0],pontos4[1]),
-    //     new Aresta(pontos4[2],pontos4[3]),
-    //     new Aresta(pontos4[4],pontos4[5])
-    // };
-    // arestas4[0]->cor = 0;
-    // arestas4[1]->cor = 1;
-    // arestas4[2]->cor = 2;
-    // Objeto* obj4 = new Objeto{"Eixos", pontos4, arestas4};
-    // this->displayFile.append(obj4);
     carregarArquivos();
     this->window = dynamic_cast<Window*>(this->displayFile[0]);
     //imprimirObjetos();
 }
 
 void DisplayFile::aplicarClipping(bool isPerspectiva){
-    // Aqui está aplicando em todos os objetos do displayfile, talvez
-    // tenha que mudar isso lá na frente
     Ponto *zmin;
     Ponto *zmax;
+    // Definição do volume de visualização
+    // zmin = VRP->z/2 por questões estéticas. No valor inteiro o clipping parece muito artificial
     if(isPerspectiva){
         zmin = new Ponto(0,0,this->window->VRP->zWin/2);
         zmax = new Ponto(0,0,this->window->VRP->zWin+1);
@@ -167,7 +66,6 @@ void DisplayFile::transformada(Matriz composta){
 }
 void DisplayFile::alinhamento(Matriz composta){
     for(Objeto* obj : this->displayFile){
-        //std::cout<<obj->nome.toStdString()<<endl;
         obj->alinharPontosWin(composta);
     }
 }

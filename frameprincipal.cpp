@@ -39,15 +39,11 @@ void FramePrincipal::paintEvent(QPaintEvent *event) {
     }
 
     for (Objeto *obj : df.displayFile) {
-        //if (obj->nome == objetoAlvo) {
-            for (Aresta *aresta : obj->arestas) {
-                if(aresta->desenha){
-                    //qDebug() <<aresta->desenha<< "a " << aresta->a->xWin <<aresta->a->yWin << "b"<<aresta->b->xWin<< aresta->b->yWin;
-                    painter.drawLine(aresta->a->xWin, aresta->a->yWin, aresta->b->xWin, aresta->b->yWin);
-                }
+        for (Aresta *aresta : obj->arestas) {
+            if(aresta->desenha){
+                painter.drawLine(aresta->a->xWin, aresta->a->yWin, aresta->b->xWin, aresta->b->yWin);
             }
-            //break;
-        //}
+        }
     }
 }
 
@@ -69,10 +65,8 @@ void FramePrincipal::transformarObjeto(char op,double v1, double v2, double v3, 
         }
     }
 
-    std::cout<<this->objAtual->nome.toStdString()<<" "<<this->objCentro->nome.toStdString()<<endl;
     Matriz composta(4, 4);
     composta = Matriz::gerarIdentidade(4, 4);
-    // Move o objeto para a origem para realizar transformações
     composta = Matriz::translacao(
                    -this->objCentro->medio->x,
                    -this->objCentro->medio->y,
@@ -111,10 +105,10 @@ void FramePrincipal::transformarObjeto(char op,double v1, double v2, double v3, 
     // Aplica as alterações às coordenadas do objeto
     this->objAtual->transformarPontos(composta);
 
-    // Chama a transformada de viewport
     pipeline();
 }
 void FramePrincipal::ajustarPosicionamento(){
+    // Função para ajustes dos objetos na cena
     objAtual = getObjetoByName("Charizard");
     transformarObjeto('T',180,100,200,0,'S');
     transformarObjeto('E',10,10,10,0,'S');
@@ -127,49 +121,56 @@ void FramePrincipal::ajustarPosicionamento(){
 }
 
 void FramePrincipal::pipeline(){
-
+    // "Cópia" das coordenadas
     for(Objeto* obj : this->df.displayFile){
         obj->ajustarSCN();
     }
+
+    // Define o ponto central a depender do tipo de projeção
     Ponto centro;
     if(this->isPerspectiva){
         centro = *window->COP;
     }else{
         centro = *window->VRP;
     }
+    // Decomposição dos ângulos para obtenção dos valores
     auto [anguloEixoX, anguloEixoY, anguloEixoZ] = calcularAngulos(*window->VPN,*window->viewUp,centro);
 
-    Matriz composta(4,4);
-    composta = Matriz::gerarIdentidade(4,4);
-    composta = Matriz::translacao(-centro.x,-centro.y,-centro.z) * composta;
-    composta = Matriz::rotacaoY(-anguloEixoY) * composta;
-    composta = Matriz::rotacaoX(anguloEixoX) * composta;
-    composta = Matriz::rotacaoZ(anguloEixoZ) * composta;
+    Matriz projecao(4,4);
+    projecao = Matriz::gerarIdentidade(4,4);
+    projecao = Matriz::translacao(-centro.x,-centro.y,-centro.z) * projecao;
+    projecao = Matriz::rotacaoY(-anguloEixoY) * projecao;
+    projecao = Matriz::rotacaoX(anguloEixoX) * projecao;
+    projecao = Matriz::rotacaoZ(anguloEixoZ) * projecao;
+
     if(this->isPerspectiva){
-        composta = Matriz::perspectiva(window->getDistanciaFocal()) * composta;
+        projecao = Matriz::perspectiva(window->getDistanciaFocal()) * projecao;
     }
-    composta = Matriz::escalonamento(2/window->getLargura(),2/window->getAltura(),2/window->getProfundidade())  * composta;
-    df.alinhamento(composta);
+
+    projecao = Matriz::escalonamento(2/window->getLargura(),2/window->getAltura(),2/window->getProfundidade())  * projecao;
+    df.alinhamento(projecao);
     df.aplicarClipping(this->isPerspectiva);
+
     // transformada de VP
-    Matriz composta2(3,3);
-    composta2 = Matriz::gerarIdentidade(3,3);
-    composta2 = Matriz::translacao2D(1,1) * composta2;
-    composta2 = Matriz::escalonamento2D(0.5,0.5)* composta2;
-    composta2 = Matriz::escalonamento2D(1,-1) * composta2;
-    composta2 = Matriz::translacao2D(0,1) * composta2;
-    composta2 = Matriz::escalonamento2D(LARGURA_VP,ALTURA_VP) * composta2;
+    Matriz visualizacao(3,3);
+    visualizacao = Matriz::gerarIdentidade(3,3);
+    visualizacao = Matriz::translacao2D(1,1) * visualizacao;
+    visualizacao = Matriz::escalonamento2D(0.5,0.5)* visualizacao;
+    visualizacao = Matriz::escalonamento2D(1,-1) * visualizacao;
+    visualizacao = Matriz::translacao2D(0,1) * visualizacao;
+    visualizacao = Matriz::escalonamento2D(LARGURA_VP,ALTURA_VP) * visualizacao;
 
     //translacao para o centro da vp [visualizar o clipping]
-    composta2 = Matriz::translacao2D(20,20) *composta2;
+    visualizacao = Matriz::translacao2D(20,20) *visualizacao;
 
-    df.transformada(composta2);
+    df.transformada(visualizacao);
 
     update();
 }
 
 std::tuple<double, double, double> FramePrincipal::calcularAngulos(Ponto ponto, Ponto viewUp,Ponto centro){
 
+    // Mesma estratégia utilizada no cálculo do viewUp em 2D, com adicional da decomposição dos ângulos
     Ponto *vpn = new Ponto(ponto.xWin-centro.xWin, ponto.yWin-centro.yWin, ponto.zWin-centro.zWin);
     Ponto *vUp = new Ponto(viewUp.xWin-centro.xWin, viewUp.yWin-centro.yWin, viewUp.zWin-centro.zWin);
     Objeto obj;

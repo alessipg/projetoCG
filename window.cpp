@@ -29,20 +29,19 @@ Window::Window(QString nome, QList<Ponto*> pontos, QList<Aresta*> arestas) : Obj
     // zmax: Ponto com z ajustado
     this->zmax = new Ponto(this->VRP->x, this->VRP->y, this->VRP->z + 1000);
 
-    // Adiciona zmin e zmax à lista de pontos
     this->pontos.append(this->zmin);
     this->pontos.append(this->zmax);
 }
 /*
- * 3---------------------2
- * |          |          |
- * |          |          |
- * |          5          |
- * |----------4----------| 450
- * |          |          |
- * |          |          |
- * |          |          |
- * 0---------------------1
+ * 3---------------------2              |
+ * |          |          |              |
+ * |          |          |              |
+ * |          5          |              |       225
+ * |----------4----------|450       VPN-|-----------------COP
+ * |          |          |              |
+ * |          |          |              |
+ * |          |          |              |
+ * 0---------------------1              |
  *           500
  */
 float Window::getLargura(){
@@ -67,9 +66,13 @@ float Window::getDistanciaFocal() {
                 pow(this->VRP->z - this->COP->z, 2));
 }
 Window::~Window() {
-    this->pontos.removeOne(VRP);  // Remove centro de pontos
-    this->pontos.removeOne(viewUp); // Remove viewUp de pontos
-    delete VRP;  // Libera o centro
-    delete viewUp;  // Libera o viewUp
+    this->pontos.removeOne(VRP);
+    this->pontos.removeOne(viewUp);
+    delete VRP;
+    delete viewUp;
+    delete COP;
+    delete zmin;
+    delete zmax;
+    delete medio;
 
 }
