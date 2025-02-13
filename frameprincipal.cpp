@@ -10,8 +10,6 @@ FramePrincipal::FramePrincipal(QWidget *parent)
     //ponteiro para window no displayfile, mais facil de realizar as manipulações
     this->window = dynamic_cast<Window*>(df.displayFile[0]);
     this->isPerspectiva = false;
-    this->objAtual = this->window;
-    this->objCentro = this->window;
     ajustarPosicionamento();
     this->objAtual = this->window;
     this->objCentro = this->getObjetoByName("Charizard");
