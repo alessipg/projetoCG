@@ -1,7 +1,4 @@
 #include "frameprincipal.h"
-#include <iostream>
-#include <math.h>
-
 
 FramePrincipal::FramePrincipal(QWidget *parent)
     : QFrame{parent}
@@ -29,7 +26,7 @@ Objeto* FramePrincipal::getObjetoByName(const QString& nome) {
 void FramePrincipal::paintEvent(QPaintEvent *event) {
     QFrame::paintEvent(event);
     QPainter painter(this);
-    painter.setPen(QPen(Qt::cyan,1));
+    painter.setPen(QPen(Qt::blue,1));
 
     //desenhando a viewport
     for(Aresta* aresta: window->arestas){

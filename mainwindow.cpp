@@ -8,7 +8,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
+    ui->frame->setStyleSheet("background-color: rgb(255, 255, 255)");
     QButtonGroup *eixos = new QButtonGroup(this);
     QButtonGroup *centros = new QButtonGroup(this);
     eixos->addButton(ui->rotX);

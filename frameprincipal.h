@@ -11,7 +11,7 @@
 #include <QStringList>
 #include <QTextStream>
 #include <iostream>
-
+#include <qmath.h>
 #include <aresta.h>
 #include <displayfile.h>
 #include <matriz.h>
