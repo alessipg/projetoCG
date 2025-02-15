@@ -122,31 +122,6 @@ void Objeto::ajustarSCN(){
         p->wWin = 1;
     }
 }
-void Objeto::clipping(float xmin,float xmax, float ymin, float ymax){
-    //orientacoes iguais ao dos slides
-    //rc[0] cima
-    //rc[1] baixo
-    //rc[2] direita
-    //rc[3] esquerda
-    for(Ponto* p : this->pontos){
-        //set rc
-        if(p->xWin>xmax)
-            p->rc[0]=true;
-        else if(p->xWin<xmin)
-            p->rc[1]=true;
-        if(p->yWin>ymax)
-            p->rc[2]=true;
-        else if(p->yWin<ymin)
-            p->rc[3]=true;
-    }
-    for (Aresta* a :this->arestas){
-        a->desenha = 0;//PAREI AQUI, LIMPA MAS N VOLTA
-        for(int i = 0;i<4;i++){
-            a->desenha+=a->a->rc[i]&&a->b->rc[i];
-        }
-    }
-
-}
 
 Objeto::~Objeto() {
     // Libera a memória dos pontos e arestas gerenciados

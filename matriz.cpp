@@ -116,17 +116,6 @@ Matriz Matriz::rotacaoZ(float angulo) {
     return matrizRot;
 }
 
-Matriz Matriz::rotacao2D(float angulo) {
-    Matriz matrizRot(3,3);
-    matrizRot = Matriz::gerarIdentidade(3,3);
-    double rad = (angulo * PI) / 180;
-    matrizRot(0,0) = cos(rad);
-    matrizRot(0,1) = -sin(rad);
-    matrizRot(1,0) = sin(rad);
-    matrizRot(1,1) = cos(rad);
-    return matrizRot;
-}
-
 Matriz Matriz::escalonamento(float sx, float sy, float sz) {
 
     Matriz matrizEsc(4,4);
@@ -153,12 +142,6 @@ Matriz Matriz::perspectiva(float d){
     persp(3,3) = 0;
     persp(3,2) = 1/d;
     return persp;
-}
-Matriz Matriz::normalizacao(float d){
-    Matriz norm(4,4);
-    norm = Matriz::gerarIdentidade(4,4);
-    norm(3,3) = d;
-    return norm;
 }
 
 // Função para imprimir a matriz

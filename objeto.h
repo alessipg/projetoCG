@@ -23,7 +23,6 @@ public:
     void alinharPontosWin(Matriz composta);
     void transformarPontos(Matriz composta);
     void transformarPontosWin(Matriz composta);
-    void clipping(float xmin, float xmax, float ymin, float ymax);
 };
 
 #endif // OBJETO_H

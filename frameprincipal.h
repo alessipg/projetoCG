@@ -35,14 +35,10 @@ public:
     Window *window;
     DisplayFile df;
     void pipeline();
-    void escalonarPontos();
     void centralizarWindow();
     void ajustarPosicionamento();
     Objeto* getObjetoByName(const QString& nome);
     void paintEvent(QPaintEvent *event) override;
-    void processarEntrada(const QString inputText);
-    void corrigirRotacaoWindow(Window *inputWindow);
-    void calcularCoordenadasViewPort(Window *inputWindow);
     explicit FramePrincipal(QWidget *parent = nullptr);
     std::tuple<double, double, double> calcularAngulos(Ponto p, Ponto vUp, Ponto centro);
 public slots:

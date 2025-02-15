@@ -175,9 +175,9 @@ void DisplayFile::carregarArquivos() {
         Objeto* obj = new Objeto(nomeObjeto, pontosDuplicados, arestas);
         this->displayFile.append(obj);
 
-        qDebug() << "Objeto '" << nomeObjeto << "' adicionado ao DisplayFile com"
-                 << pontosDuplicados.size() << "pontos e"
-                 << arestas.size() << "arestas.";
+        // qDebug() << "Objeto '" << nomeObjeto << "' adicionado ao DisplayFile com"
+        //          << pontosDuplicados.size() << "pontos e"
+        //          << arestas.size() << "arestas.";
 
         file.close();
     }

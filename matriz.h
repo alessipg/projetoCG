@@ -20,11 +20,9 @@ public:
     int getColunas() const;
     float& operator()(int i, int j);
     static Matriz perspectiva(float d);
-    static Matriz normalizacao(float d);
     static Matriz rotacaoX(float angulo);
     static Matriz rotacaoZ(float angulo);
     static Matriz rotacaoY(float angulo);
-    static Matriz rotacao2D(float angulo);
     static Matriz translacao2D(float dx, float dy);
     static Matriz escalonamento2D(float sx, float sy);
     static Matriz gerarIdentidade(int linhas, int colunas);
